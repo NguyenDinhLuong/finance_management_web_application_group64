@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+
 
 @Service
 public class CurrencyService {
@@ -18,7 +20,11 @@ public class CurrencyService {
     public String getExchangeRates() {
         String API_URL = "https://openexchangerates.org/api/latest.json?app_id=371446c007bb4489a465d02220f4d516&base=USD&callback=someCallbackFunction";
         String response = restTemplate.getForObject(API_URL, String.class);
-        // currencyResponse = response.getBody();
+
+        if(response != null) {
+            response = response.replace("someCallbackFunction(", "");
+            response = response.replace(")", "");
+        }
 
         return response;
 
