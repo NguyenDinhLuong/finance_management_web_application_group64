@@ -4,12 +4,9 @@ import com.example.backend.service.CurrencyService;
 import org.springframework.web.client.RestTemplate;
 import org.json.*;
 
+import java.text.DecimalFormat;
+
 public class Currency {
-
-    public static void main(String[] args) {
-
-    }
-
 
     /**
      * get exchange rate of currencyCode entered.
@@ -25,14 +22,27 @@ public class Currency {
 
         JSONObject object = new JSONObject(exchangeRates);
 
-        return object.getJSONObject("rates").getDouble("GBP");
+        return object.getJSONObject("rates").getDouble(currencyCode);
 
     }
 
-    public static double convertCurrency(String inputCurrencyCode, String outputCurrencyCode, double currentValue) {
+    /**
+     * converts currency value
+     * @param inputCurrencyCode this is the currency code of the original value
+     * @param outputCurrencyCode currency code you wish to convert to
+     * @param currentValue original value of currency to convert
+     * @return converted currency value
+     */
+    public double convertCurrency(String inputCurrencyCode, String outputCurrencyCode, double currentValue) {
         Currency currency = new Currency();
         double inputExchangeRate = currency.getExchangeRate(inputCurrencyCode);
-//        double outputExchangeRate
+        double outputExchangeRate = currency.getExchangeRate(outputCurrencyCode);
+
+        double convert = (currentValue / inputExchangeRate) * outputExchangeRate;
+
+        DecimalFormat format = new DecimalFormat("0.00");
+        convert = Double.parseDouble(format.format(convert));
+        return convert;
 
 
     }
