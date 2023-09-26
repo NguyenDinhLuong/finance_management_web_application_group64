@@ -2,6 +2,7 @@ package com.example.backend.security.jwt;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,19 +23,21 @@ public class JwtUtils {
     private String jwtSecret;
 
     @Value("${example.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    private Long jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
+    public String generateJwtToken(UserDetailsImpl userPrincipal) {
+        return generateTokenFromUsername(userPrincipal.getUsername());
+    }
 
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-
+    public String generateTokenFromUsername(String username) {
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
@@ -58,7 +61,6 @@ public class JwtUtils {
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
         }
-
         return false;
     }
 }
