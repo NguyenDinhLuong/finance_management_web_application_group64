@@ -70,13 +70,12 @@ public class AuthController {
 
         String jwt = jwtUtils.generateJwtToken(userDetails);
 
-        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+        String role = userDetails.getAuthorities().toString();
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
-                userDetails.getUsername(), userDetails.getEmail(), roles));
+                userDetails.getUsername(), userDetails.getEmail(), userDetails.getFirstName(), userDetails.getLastName(), role));
     }
 
     @PostMapping("/refreshtoken")
@@ -110,31 +109,30 @@ public class AuthController {
         // Create new user's account
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
+                signUpRequest.getFirstName(),
+                signUpRequest.getLastName(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        Set<String> strRoles = signUpRequest.getRole();
-        Set<Role> roles = new HashSet<>();
+        String strRole = signUpRequest.getRole();
 
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+        if (strRole == null) {
+            Role role = roleRepository.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
+            user.setRole(role);
+            userRepository.save(user);
         } else {
-            strRoles.forEach(role -> {
-                if (role.equals("admin")) {
-                    Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                    roles.add(adminRole);
-                } else {
-                    Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                    roles.add(userRole);
-                }
-            });
+            if (strRole.equals("admin")) {
+                Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                user.setRole(adminRole);
+                userRepository.save(user);
+            } else {
+                Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                user.setRole(userRole);
+                userRepository.save(user);
+            }
         }
-
-        user.setRoles(roles);
-        userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
