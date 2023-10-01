@@ -2,22 +2,21 @@ package com.example.backend.controller;
 
 import com.example.backend.exception.TokenRefreshException;
 import com.example.backend.model.RefreshToken;
+import com.example.backend.payload.request.LogoutRequest;
 import com.example.backend.payload.request.TokenRefreshRequest;
 import com.example.backend.payload.response.TokenRefreshResponse;
+import com.example.backend.repository.RefreshTokenRepository;
 import com.example.backend.security.services.RefreshTokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.example.backend.model.ERole;
 import com.example.backend.model.Role;
 import com.example.backend.model.User;
@@ -29,6 +28,8 @@ import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.jwt.JwtUtils;
 import com.example.backend.security.services.UserDetailsImpl;
+
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -42,6 +43,9 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -70,6 +74,19 @@ public class AuthController {
 
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
                 userDetails.getUsername(), userDetails.getEmail(), userDetails.getFirstName(), userDetails.getLastName(), role));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser(@Valid @RequestBody LogoutRequest logoutRequest) {
+
+        Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(logoutRequest.getRefreshToken());
+
+        refreshToken.ifPresent(token -> refreshTokenRepository.delete(token));
+
+        // Return a response indicating whether the logout was successful or not
+        return refreshToken.isPresent() ?
+                ResponseEntity.ok(new MessageResponse("User logged out successfully")) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Refresh token is not in database!"));
     }
 
     @PostMapping("/refreshtoken")
