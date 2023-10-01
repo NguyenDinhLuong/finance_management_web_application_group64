@@ -40,7 +40,7 @@ export default function Login() {
             }}
           >
             <Box
-              component='main'
+              component="main"
               sx={{
                 my: 'auto',
                 py: 2,
@@ -63,10 +63,10 @@ export default function Login() {
               }}
             >
               <div>
-                <Typography component='h1' fontSize='xl2' fontWeight='lg'>
+                <Typography component="h1" fontSize="xl2" fontWeight="lg">
                   Sign in to your account
                 </Typography>
-                <Typography level='body-sm' sx={{ my: 1, mb: 3 }}>
+                <Typography level="body-sm" sx={{ my: 1, mb: 3 }}>
                   Welcome back
                 </Typography>
               </div>
@@ -81,9 +81,9 @@ export default function Login() {
               </Button> */}
               <Link
                 component={RouterLink}
-                fontSize='sm'
-                to='/sign-up'
-                fontWeight='lg'
+                fontSize="sm"
+                to="/signup"
+                fontWeight="lg"
               >
                 Don't have an account? Sign Up
               </Link>
