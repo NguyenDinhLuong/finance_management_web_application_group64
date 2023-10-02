@@ -9,10 +9,13 @@ import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import ColorSchemeToggle from '../ColorSchemeToggle/ColorSchemeToggle';
+import { cleanToken, getRefreshToken } from '../../utils/token';
+import { toast } from 'react-toastify';
+import apiInstance from '../../apis/Axios';
 
 const publicRoutes = [
   '/login',
-  '/sign-up',
+  '/signup',
   '/forgot-password',
   '/reset-password',
 ];
@@ -21,6 +24,24 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const isPublicPage = publicRoutes.includes(location.pathname);
+  const refreshToken = getRefreshToken();
+
+  const handleLogout = async () => {
+    const response = await apiInstance
+      .post('/auth/logout', { refreshToken })
+      .then(response => {
+        toast.success('Successfully logout!');
+        cleanToken();
+        navigate('/login');
+        return true;
+      })
+      .catch(error => {
+        console.log('logout error: ', error.response);
+        toast.error('Something wrong with your account.');
+        return false;
+      });
+    return response;
+  };
   return (
     <Box
       component="header"
@@ -77,7 +98,9 @@ export default function Header() {
               slots={{ root: IconButton }}
               slotProps={{ root: { variant: 'plain', color: 'neutral' } }}
               sx={{ borderRadius: 50, padding: 0 }}
-            ></MenuButton>
+            >
+              <Avatar>NL</Avatar>
+            </MenuButton>
             <Menu>
               <MenuItem>
                 <Link
@@ -92,6 +115,7 @@ export default function Header() {
                   Profile
                 </Link>
               </MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Dropdown>
         )}

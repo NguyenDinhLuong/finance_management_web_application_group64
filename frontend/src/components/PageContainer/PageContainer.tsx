@@ -14,7 +14,7 @@ type PageContainerProps = {
 export default function PageContainer({ children }: PageContainerProps) {
   return (
     <CssVarsProvider
-      defaultMode='dark'
+      defaultMode="dark"
       disableTransitionOnChange
       theme={mergedTheme}
     >
@@ -30,7 +30,7 @@ export default function PageContainer({ children }: PageContainerProps) {
         }}
       />
       <Stack
-        sx={(theme) => ({
+        sx={theme => ({
           backgroundColor: theme.palette.background.default,
           overflow: 'auto',
         })}
