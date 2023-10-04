@@ -19,8 +19,7 @@ public class RestTaxController {
 
     Double tax;
     private SessionFactory factory = new Configuration()
-            .configure("pom.xml")
-            .addAnnotatedClass(User.class)
+            .configure("src/main/resources/hibernate.config.xml")
             .buildSessionFactory();
 
 //    two ways of enter income
