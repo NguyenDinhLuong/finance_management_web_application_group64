@@ -8,7 +8,6 @@ public class EnterIncomeRequest {
 
     @NotBlank
     private double income;
-
     private int year;
     private String residential;
 

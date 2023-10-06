@@ -19,9 +19,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tax")
 public class RestTaxController {
-    private SessionFactory factory = new Configuration()
-            .configure("src/main/resources/hibernate.config.xml")
-            .buildSessionFactory();
+//    private SessionFactory factory = new Configuration()
+//            .configure("src/main/resources/hibernate.config.xml")
+//            .buildSessionFactory();
 
 //    two ways of enter income
 //    text field
@@ -56,26 +56,26 @@ public class RestTaxController {
 
 
 //   should check the token/login state for security reason
-    @GetMapping("/getAllIncome")
-    public ResponseEntity<?> getAllIncome(){
-        Session session = factory.getCurrentSession();
-
-        try{
-
-            session.beginTransaction();
-            List<Income> incomeList = session.createQuery("FROM Income").getResultList();
-            session.getTransaction().commit();
-
-            return ResponseEntity.ok(new AllIncomeResponse(incomeList));
-
-        }catch (Exception e){
-
-            e.printStackTrace();
-            session.getTransaction().rollback();
-
-            return ResponseEntity.ok("No income has been created to your account.");
-        }
-    }
+//    @GetMapping("/getAllIncome")
+//    public ResponseEntity<?> getAllIncome(){
+//        Session session = factory.getCurrentSession();
+//
+//        try{
+//
+//            session.beginTransaction();
+//            List<Income> incomeList = session.createQuery("FROM Income").getResultList();
+//            session.getTransaction().commit();
+//
+//            return ResponseEntity.ok(new AllIncomeResponse(incomeList));
+//
+//        }catch (Exception e){
+//
+//            e.printStackTrace();
+//            session.getTransaction().rollback();
+//
+//            return ResponseEntity.ok("No income has been created to your account.");
+//        }
+//    }
 
     @PostMapping("/getInvestmentTax")
     public ResponseEntity<?> getPortfolioTax(@RequestParam Investment investment, @RequestParam double taxRate){
@@ -96,25 +96,25 @@ public class RestTaxController {
 
     }
 
-    @GetMapping("/getAllInvestment")
-    public ResponseEntity<?> getAllInvestment(){
-        Session session = factory.getCurrentSession();
-
-        try{
-
-            session.beginTransaction();
-            List<Investment> investmentList = session.createQuery("FROM Investment ").getResultList();
-            session.getTransaction().commit();
-
-            return ResponseEntity.ok(new AllInvestmentResponse(investmentList));
-
-        }catch (Exception e){
-
-            e.printStackTrace();
-            session.getTransaction().rollback();
-
-            return ResponseEntity.ok("No investment has been created to your account.");
-        }
-    }
+//    @GetMapping("/getAllInvestment")
+//    public ResponseEntity<?> getAllInvestment(){
+//        Session session = factory.getCurrentSession();
+//
+//        try{
+//
+//            session.beginTransaction();
+//            List<Investment> investmentList = session.createQuery("FROM Investment ").getResultList();
+//            session.getTransaction().commit();
+//
+//            return ResponseEntity.ok(new AllInvestmentResponse(investmentList));
+//
+//        }catch (Exception e){
+//
+//            e.printStackTrace();
+//            session.getTransaction().rollback();
+//
+//            return ResponseEntity.ok("No investment has been created to your account.");
+//        }
+//    }
 
 }
