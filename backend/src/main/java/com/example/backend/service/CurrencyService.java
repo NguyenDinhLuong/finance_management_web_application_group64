@@ -25,6 +25,6 @@ public class CurrencyService {
             response = response.replace("someCallbackFunction(", "");
             response = response.replace(")", "");
         }
-        return response;z 
+        return response;
     }
 }
