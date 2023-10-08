@@ -8,6 +8,11 @@ import java.text.DecimalFormat;
 
 public class Currency {
 
+    public static void main(String[] args) {
+        Currency c = new Currency();
+        System.out.println(c.convertCurrency("USD", "VND", 20));
+    }
+
     /**
      * get exchange rate of currencyCode entered.
      * Note that the result is in relation to USD
@@ -21,6 +26,9 @@ public class Currency {
         String exchangeRates = service.getExchangeRates();
 
         JSONObject object = new JSONObject(exchangeRates);
+
+        System.out.print(object);
+
 
         return object.getJSONObject("rates").getDouble(currencyCode);
 
