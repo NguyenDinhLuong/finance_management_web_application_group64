@@ -1,9 +1,15 @@
 package com.example.backend.model;
 
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "investments", uniqueConstraints = {
@@ -12,6 +18,9 @@ import java.util.Date;
         }),
 
 })
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Investment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,21 +31,28 @@ public class Investment {
 
     private InvestmentType type;
 
+    @Size(max = 100)
+    private String description;
+
     private double amount;
 
-    @DateTimeFormat
-    private Date date;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
 
-    public Investment(){
-
+    public Investment(User user, String investmentType, double amount, String date, String description){
+        this.user = user;
+        this.type = InvestmentType.valueOf(investmentType);
+        this.amount = amount;
+        this.date = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.description = description;
     }
 
     public void setAmount(double amount) {
         this.amount = amount;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(String date) {
+        this.date = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     public void setUser(User user) {
@@ -47,15 +63,15 @@ public class Investment {
         this.investmentId = investmentId;
     }
 
-    public void setType(InvestmentType type) {
-        this.type = type;
+    public void setType(String type) {
+        this.type = InvestmentType.valueOf(type);
     }
 
     public double getAmount() {
         return amount;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 

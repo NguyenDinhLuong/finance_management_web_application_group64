@@ -23,7 +23,7 @@ public class Expense {
     @Size(max = 100)
     private String category;
 
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
     @NotBlank

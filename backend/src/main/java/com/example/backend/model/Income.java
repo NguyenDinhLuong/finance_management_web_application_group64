@@ -22,7 +22,7 @@ public class Income {
     @Size(max = 100)
     private String source;
 
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
     @NotBlank

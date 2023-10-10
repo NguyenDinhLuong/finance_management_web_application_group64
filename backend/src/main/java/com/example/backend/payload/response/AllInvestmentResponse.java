@@ -9,9 +9,11 @@ import java.util.List;
 @Data
 public class AllInvestmentResponse {
 
-    private List<Investment> investmentList;
+    private List<InvestmentInfoResponse> investmentList;
 
     public AllInvestmentResponse(List<Investment> investmentList){
-        this.investmentList = investmentList;
+        for(Investment investment: investmentList){
+            this.investmentList.add(new InvestmentInfoResponse(investment));
+        }
     }
 }
