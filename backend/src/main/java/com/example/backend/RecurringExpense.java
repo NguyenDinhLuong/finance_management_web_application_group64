@@ -3,6 +3,7 @@ package com.example.backend;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class RecurringExpense extends Expenses {
 
@@ -37,8 +38,23 @@ public class RecurringExpense extends Expenses {
         }
     }
 
-    public Boolean remind() {
+
+
+    public long daysUnilDue() {
         LocalDate thisDate = LocalDate.now();
+        long daysBetween = ChronoUnit.DAYS.between(dueDate, thisDate);
+
+        return daysBetween;
+
+    }
+
+    public Boolean remind() {
+        updateDueDate();
+        long daysBetween = daysUnilDue();
+
+        return daysBetween <= reminder;
+
+
     }
 
 }
