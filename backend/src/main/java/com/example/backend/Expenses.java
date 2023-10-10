@@ -11,6 +11,7 @@ public class Expenses {
     private final String description;
     private final LocalDate date;
 
+
     public Expenses(int id, String category, Double amount, String currency, String description, LocalDate date) {
         this.id = id;
         this.category = category;

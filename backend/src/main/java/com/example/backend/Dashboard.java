@@ -20,6 +20,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
@@ -167,6 +168,14 @@ public class Dashboard {
         }
 
         JFreeChart pieChart = ChartFactory.createPieChart("Spending by Category", dataset);
+        PiePlot plot = (PiePlot) pieChart.getPlot();
+        plot.setLabelGenerator(null);
+
+//
+//        plot.setSectionPaint("Category A", Color.decode("#FF5733"));
+//        plot.setSectionPaint("Category B", Color.decode("#00FF00"));
+//        plot.setSectionPaint("Category C", Color.decode("#0000FF"));
+//        plot.setSectionPaint("Category D", Color.decode("#FFD700"));
 
         BufferedImage bufferedImage = pieChart.createBufferedImage(800, 600);
 
