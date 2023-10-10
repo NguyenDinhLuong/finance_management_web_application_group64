@@ -26,6 +26,8 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.ui.ApplicationFrame;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
 import org.springframework.cglib.core.Local;
 
 import java.io.File;
@@ -45,10 +47,13 @@ public class Dashboard {
         Dashboard d = new Dashboard();
         ArrayList<Expenses> e = d.generateTestData();
 
-        ArrayList<Expenses> expensesByMonth = d.getExpensesByMonth(e, 1);
-        HashMap<String, ArrayList<Expenses>> sortedCategories = d.getExpensesInCategories(e);
+//        ArrayList<Expenses> expensesByMonth = d.getExpensesByMonth(e, 1);
+//        HashMap<String, ArrayList<Expenses>> sortedCategories = d.getExpensesInCategories(e);
+//
+//        d.generateBarChart(e);
 
-        d.generateBarChart(e);
+        d.generatePieChart(e);
+
 
 
         return;
@@ -147,6 +152,35 @@ public class Dashboard {
         totalExpenses = Double.parseDouble(format.format(totalExpenses));
 
         return totalExpenses;
+    }
+
+    public void generatePieChart(ArrayList<Expenses> expenses) {
+        HashMap<String, ArrayList<Expenses>> categorisedExpenses;
+        categorisedExpenses = getExpensesInCategories(expenses);
+        ArrayList<String> keys = new ArrayList<String>(categorisedExpenses.keySet());
+
+        DefaultPieDataset dataset = new DefaultPieDataset();
+
+        for(String key : keys) {
+            Double sum = sumOfExpenses(categorisedExpenses.get(key));
+            dataset.setValue(key, sum);
+        }
+
+        JFreeChart pieChart = ChartFactory.createPieChart("Spending by Category", dataset);
+
+        BufferedImage bufferedImage = pieChart.createBufferedImage(800, 600);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        try {
+            ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+            // DEBUG ONLY
+            ImageIO.write(bufferedImage, "png", new File("/Users/jordantanti/Desktop/finance_management_web_application_group64/backend/src/main/resources/image.png"));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+
     }
 
 
