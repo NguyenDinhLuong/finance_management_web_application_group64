@@ -4,12 +4,12 @@ import java.time.LocalDate;
 
 public class Expenses {
 
-    private int id;
-    private String category;
-    private Double amount;
-    private String currency;
-    private String description;
-    private LocalDate date;
+    private final int id;
+    private final String category;
+    private final Double amount;
+    private final String currency;
+    private final String description;
+    private final LocalDate date;
 
     public Expenses(int id, String category, Double amount, String currency, String description, LocalDate date) {
         this.id = id;
