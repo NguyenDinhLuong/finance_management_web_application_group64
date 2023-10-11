@@ -1,11 +1,20 @@
 package com.example.backend;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ExpenseReminders {
 
     public static void main(String[] args) {
 
+
+
+    }
+
+    public ArrayList<RecurringExpense> generateTestData() {
+        ArrayList<RecurringExpense> testExpenses = new ArrayList<RecurringExpense>();
+
+        return testExpenses;
     }
 
     public ArrayList<String> generateReminders(ArrayList<RecurringExpense> expenses) {

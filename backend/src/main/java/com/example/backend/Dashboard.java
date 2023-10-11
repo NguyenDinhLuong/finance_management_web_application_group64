@@ -53,7 +53,7 @@ public class Dashboard {
 //
 //        d.generateBarChart(e);
 
-        d.generatePieChart(e);
+        d.generateBarChart(e);
 
 
 
@@ -268,7 +268,7 @@ public class Dashboard {
         try {
             ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
             // DEBUG ONLY
-//            ImageIO.write(bufferedImage, "png", new File("/Users/jordantanti/Desktop/finance_management_web_application_group64/backend/src/main/resources/image.png"));
+            ImageIO.write(bufferedImage, "png", new File("/Users/jordantanti/Desktop/finance_management_web_application_group64/backend/src/main/resources/image.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
