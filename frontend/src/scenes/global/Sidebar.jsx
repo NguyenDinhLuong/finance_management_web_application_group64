@@ -9,13 +9,15 @@ import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
 import ReceiptOutlinedIcon from '@mui/icons-material/ReceiptOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import PieChartOutlineOutlinedIcon from '@mui/icons-material/PieChartOutlineOutlined';
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
+import PaymentIcon from '@mui/icons-material/Payment';
+import PaidIcon from '@mui/icons-material/Paid';
+import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
+import CalculateIcon from '@mui/icons-material/Calculate';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -80,7 +82,7 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
+                  USER
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -91,15 +93,6 @@ const Sidebar = () => {
 
           {!isCollapsed && (
             <Box mb="25px">
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <img
-                  alt="profile-user"
-                  width="100px"
-                  height="100px"
-                  src={`../../assets/user.png`}
-                  style={{ cursor: 'pointer', borderRadius: '50%' }}
-                />
-              </Box>
               <Box textAlign="center">
                 <Typography
                   variant="h2"
@@ -107,10 +100,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: '10px 0 0 0' }}
                 >
-                  Ed Roh
-                </Typography>
-                <Typography variant="h5" color={colors.greenAccent[500]}>
-                  VP Fancy Admin
+                  {localStorage.getItem('firstName')}
                 </Typography>
               </Box>
             </Box>
@@ -140,6 +130,41 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <Item
+              title="Incomes"
+              to="/incomeForm"
+              icon={<PaymentIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Expenses"
+              to="/expenseForm"
+              icon={<PaidIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Recurring Expenses"
+              to="/recurringExpenseForm"
+              icon={<PaidIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Investment"
+              to="/investmentForm"
+              icon={<CurrencyBitcoinIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Tax Calculation"
+              to="/"
+              icon={<CalculateIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
               title="Contacts Information"
               to="/contacts"
               icon={<ContactsOutlinedIcon />}
@@ -162,23 +187,9 @@ const Sidebar = () => {
               Pages
             </Typography>
             <Item
-              title="Profile Form"
-              to="/form"
+              title="Profile"
+              to="/profile"
               icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="FAQ Page"
-              to="/faq"
-              icon={<HelpOutlineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
