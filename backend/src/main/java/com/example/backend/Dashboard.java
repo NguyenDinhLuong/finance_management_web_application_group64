@@ -5,15 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
-import java.io.File;
 import java.util.Map;
 
 
@@ -163,6 +154,7 @@ public class Dashboard {
         pastThreeMonthsLabel.add(String.valueOf(date.getMonth()));
 
         Collections.reverse(pastThreeMonthsValue);
+        Collections.reverse(pastThreeMonthsLabel);
 
         ArrayList<ArrayList<Expenses>> expensesPastThreeMonths = new ArrayList<>();
         for (Integer month : pastThreeMonthsValue) {
