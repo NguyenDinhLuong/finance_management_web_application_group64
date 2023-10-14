@@ -1,12 +1,7 @@
 package com.example.backend;
 
-import com.sun.tools.javac.Main;
-
-import java.awt.*;
-import java.sql.Array;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,24 +10,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.StandardBarPainter;
-import org.jfree.chart.ui.ApplicationFrame;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
-import org.springframework.cglib.core.Local;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 
@@ -51,9 +32,9 @@ public class Dashboard {
 //        ArrayList<Expenses> expensesByMonth = d.getExpensesByMonth(e, 1);
 //        HashMap<String, ArrayList<Expenses>> sortedCategories = d.getExpensesInCategories(e);
 //
-//        d.generateBarChart(e);
+        d.generateBarChart(e);
 
-        d.generatePieChart(e);
+//        d.generatePieChart(e);
 
 
 
@@ -114,7 +95,7 @@ public class Dashboard {
      * @param expenses ArrayList of expenses
      * @return sorted ArrayList. Each key in the hashmap is a category
      */
-    public HashMap<String, ArrayList<Expenses>> getExpensesInCategories(ArrayList<Expenses> expenses) {
+    public HashMap<String, Double> getExpensesInCategories(ArrayList<Expenses> expenses) {
         if(expenses.isEmpty()) {
             return new HashMap<>();
         }
@@ -134,7 +115,13 @@ public class Dashboard {
             }
         }
 
-        return expensesByCategory;
+        HashMap<String, Double> totalExpensesByCategory = new HashMap<String, Double>();
+
+        for (Map.Entry<String, ArrayList<Expenses>> entry : expensesByCategory.entrySet()) {
+            totalExpensesByCategory.put(entry.getKey(), sumOfExpenses(entry.getValue()));
+        }
+
+        return totalExpensesByCategory;
     }
 
     /**
@@ -155,45 +142,7 @@ public class Dashboard {
         return totalExpenses;
     }
 
-    public void generatePieChart(ArrayList<Expenses> expenses) {
-        HashMap<String, ArrayList<Expenses>> categorisedExpenses;
-        categorisedExpenses = getExpensesInCategories(expenses);
-        ArrayList<String> keys = new ArrayList<String>(categorisedExpenses.keySet());
-
-        DefaultPieDataset dataset = new DefaultPieDataset();
-
-        for(String key : keys) {
-            Double sum = sumOfExpenses(categorisedExpenses.get(key));
-            dataset.setValue(key, sum);
-        }
-
-        JFreeChart pieChart = ChartFactory.createPieChart("Spending by Category", dataset);
-        PiePlot plot = (PiePlot) pieChart.getPlot();
-        plot.setLabelGenerator(null);
-
-//
-//        plot.setSectionPaint("Category A", Color.decode("#FF5733"));
-//        plot.setSectionPaint("Category B", Color.decode("#00FF00"));
-//        plot.setSectionPaint("Category C", Color.decode("#0000FF"));
-//        plot.setSectionPaint("Category D", Color.decode("#FFD700"));
-
-        BufferedImage bufferedImage = pieChart.createBufferedImage(800, 600);
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-        try {
-            ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
-            // DEBUG ONLY
-            ImageIO.write(bufferedImage, "png", new File("/Users/jordantanti/Desktop/finance_management_web_application_group64/backend/src/main/resources/image.png"));
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-
-    }
-
-
-    public ByteArrayOutputStream generateBarChart(ArrayList<Expenses> expenses) {
+    public HashMap<String, Double> generateBarChart(ArrayList<Expenses> expenses) {
 
         // this list will store the month values of the past three months
         ArrayList<Integer> pastThreeMonthsValue = new ArrayList<Integer>();
@@ -216,65 +165,18 @@ public class Dashboard {
         Collections.reverse(pastThreeMonthsValue);
 
         ArrayList<ArrayList<Expenses>> expensesPastThreeMonths = new ArrayList<>();
-        for(Integer month : pastThreeMonthsValue) {
+        for (Integer month : pastThreeMonthsValue) {
             expensesPastThreeMonths.add(getExpensesByMonth(expenses, month));
         }
 
+        HashMap<String, Double> expensesByMonth = new HashMap<String, Double>();
 
-        ArrayList<Double> expensesByMonth = new ArrayList<Double>();
+        for (int i = 0; i < expensesPastThreeMonths.size(); i++) {
+            expensesByMonth.put(pastThreeMonthsLabel.get(i), sumOfExpenses(expensesPastThreeMonths.get(i)));
 
-        for (ArrayList<Expenses> expense : expensesPastThreeMonths) {
-            expensesByMonth.add(sumOfExpenses(expense));
         }
 
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-        for (int i = 0; i < expensesByMonth.size(); i++) {
-            dataset.addValue(expensesByMonth.get(i), pastThreeMonthsLabel.get(i), "Total Expenses");
-        }
-
-        JFreeChart chart = ChartFactory.createBarChart("Recent Monthly Expenses", "Month", "Total Expenses",
-                dataset);
-        // Remove chart background and border
-        chart.setBackgroundPaint(null);
-        chart.setBorderStroke(null);
-
-
-        // Remove axis labels and tick marks
-        CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        plot.getDomainAxis().setTickLabelsVisible(false);
-        plot.getRangeAxis().setTickLabelsVisible(true);
-
-
-        // Remove gradient shading
-        BarRenderer barRenderer = (BarRenderer) plot.getRenderer();
-        barRenderer.setBarPainter(new StandardBarPainter());
-        barRenderer.setSeriesPaint(0, Color.decode("#264653"));
-        barRenderer.setSeriesPaint(1, Color.decode("#2a9d8f"));
-        barRenderer.setSeriesPaint(2, Color.decode("#e76f51"));
-
-        // Add borders to the bars
-        barRenderer.setDrawBarOutline(true);
-
-
-        // Create a plot panel to display the chart
-        CategoryPlot categoryPlot = (CategoryPlot) chart.getPlot();
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(800, 600));
-
-        BufferedImage bufferedImage = chart.createBufferedImage(800, 600);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-        try {
-            ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
-            // DEBUG ONLY
-//            ImageIO.write(bufferedImage, "png", new File("/Users/jordantanti/Desktop/finance_management_web_application_group64/backend/src/main/resources/image.png"));
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return byteArrayOutputStream;
-
+        return expensesByMonth;
     }
 
 
