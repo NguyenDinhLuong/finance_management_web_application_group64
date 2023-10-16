@@ -1,22 +1,39 @@
 package com.example.backend.controller;
 
+import com.example.backend.model.Income;
 import com.example.backend.model.Investment;
+import com.example.backend.payload.request.AddInvestmentRequest;
+import com.example.backend.payload.response.MessageResponse;
 import com.example.backend.security.services.InvestmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/investment")
 public class InvestmentController {
     @Autowired
     private InvestmentService investmentService;
 
+    // Create a new investment
     @PostMapping("/addInvestment")
-    public Investment createInvestment(@RequestBody Investment investment) {
-        return investmentService.addInvestment(investment);
+    public ResponseEntity<?>  createInvestment(@RequestBody AddInvestmentRequest addInvestmentRequest) {
+        Investment createInvestment = investmentService.saveInvestment(addInvestmentRequest);
+        if(createInvestment == null) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Investment created unsuccessfully. Please check again!"));
+        }
+        return ResponseEntity.ok(new MessageResponse("Investment created successfully!"));
+    }
+
+    // Get all investments
+    @GetMapping
+    public ResponseEntity<List<Investment>> getAllInvestments() {
+        List<Investment> investments = investmentService.getAllInvestments();
+        return ResponseEntity.ok(investments);
     }
 }
 

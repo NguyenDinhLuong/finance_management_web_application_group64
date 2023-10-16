@@ -1,5 +1,6 @@
 package com.example.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,20 +18,27 @@ public class NormalExpense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double amount;
-    private String description;
+    private float amount;
     private String category;
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
+    private String location;
+    private String currency;
+    private String status;
+    private String paymentMethod;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
-
-    public NormalExpense(Double amount, String description, String category, Date date) {
+    public NormalExpense(float amount, String category, Date date, String location, String currency, String status, String paymentMethod) {
         this.amount = amount;
-        this.description = description;
         this.category = category;
         this.date = date;
+        this.location = location;
+        this.currency = currency;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
     }
 }

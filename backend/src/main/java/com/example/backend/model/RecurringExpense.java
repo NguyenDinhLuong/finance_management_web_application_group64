@@ -1,5 +1,6 @@
 package com.example.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,25 +18,28 @@ public class RecurringExpense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double amount;
-    private String description;
+    private float amount;
     private String category;
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private Date date;
     private String frequency;
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private String location;
+    private String currency;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
-    public RecurringExpense(Double amount, String description, String category, Date date, String frequency, Date endDate) {
+    public RecurringExpense(float amount, String category, String frequency, String location, String currency, Date startDate, Date endDate) {
         this.amount = amount;
-        this.description = description;
         this.category = category;
-        this.date = date;
         this.frequency = frequency;
+        this.location = location;
+        this.currency = currency;
+        this.startDate = startDate;
         this.endDate = endDate;
     }
 }
