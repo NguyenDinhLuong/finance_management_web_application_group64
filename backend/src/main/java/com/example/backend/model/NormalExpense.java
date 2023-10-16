@@ -32,13 +32,13 @@ public class NormalExpense {
     @Column(nullable = true)
     private Integer frequency;
     @Column(nullable = true)
-    private Date endDate;
+    private LocalDate endDate;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
 
-    public NormalExpense(Double amount, String description, String category, String currency, LocalDate date, Integer frequency, Date endDate) {
+    public NormalExpense(Double amount, String description, String category, String currency, LocalDate date, Integer frequency, LocalDate endDate) {
         this.amount = amount;
         this.description = description;
         this.category = category;
