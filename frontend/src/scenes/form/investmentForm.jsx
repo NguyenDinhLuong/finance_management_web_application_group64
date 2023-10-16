@@ -10,10 +10,29 @@ import {
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import Header from '../../components/Header';
+import { addInvestment } from '../../apis/Investment';
 
 const InvestmentForm = () => {
+  const userId = localStorage.getItem('id');
+
   const handleFormSubmit = values => {
-    console.log(values);
+    const updatedData = {
+      amount: values.amount,
+      category: values.category,
+      date: values.date,
+      duration: values.duration,
+      currency: values.currency,
+      risk: values.risk,
+      liquidity: values.liquidity,
+      user_id: userId,
+    };
+
+    const isSuccess = addInvestment({
+      ...updatedData,
+    });
+
+    if (isSuccess) {
+    }
   };
 
   return (
@@ -78,20 +97,6 @@ const InvestmentForm = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Description"
-                placeholder="Description"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.description}
-                name="description"
-                error={!!touched.description && !!errors.description}
-                helperText={touched.description && errors.description}
-                sx={{ gridColumn: 'span 2' }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
                 label="Date"
                 placeholder="dd-MM-yyyy"
                 onBlur={handleBlur}
@@ -102,6 +107,77 @@ const InvestmentForm = () => {
                 helperText={touched.date && errors.date}
                 sx={{ gridColumn: 'span 2' }}
               />
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Duration</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="duration"
+                >
+                  <MenuItem value="< 1 year">less than 1 year</MenuItem>
+                  <MenuItem value="1-5 years">1-5 years</MenuItem>
+                  <MenuItem value="> 5 years">more than 5 years</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Currency</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="currency"
+                >
+                  <MenuItem value="AUD">AUD</MenuItem>
+                  <MenuItem value="USD">USD</MenuItem>
+                  <MenuItem value="VND">VND</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Risk</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="risk"
+                >
+                  <MenuItem value="low">Low</MenuItem>
+                  <MenuItem value="moderate">Moderate</MenuItem>
+                  <MenuItem value="high">High</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Liquidity</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="liquidity"
+                >
+                  <MenuItem value="highly liquid">Highly Liquid</MenuItem>
+                  <MenuItem value="moderately liquid">
+                    Moderately Liquid
+                  </MenuItem>
+                  <MenuItem value="Less Liquid">Less Liquid</MenuItem>
+                  <MenuItem value="Illiquid">Illiquid</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
@@ -115,20 +191,28 @@ const InvestmentForm = () => {
   );
 };
 
-const dateRegExp = '\\d{2}-\\d{2}-\\d{4}';
+const dateRegExp = '\\d{4}-\\d{2}-\\d{2}';
 
 const checkoutSchema = yup.object().shape({
   amount: yup.string().required('required'),
-  typeOfInvestment: yup.string().required('required'),
+  category: yup.string().required('required'),
   date: yup
     .string()
     .matches(dateRegExp, 'Date format is not valid')
     .required('required'),
+  duration: yup.string().required('required'),
+  currency: yup.string().required('required'),
+  risk: yup.string().required('required'),
+  liquidity: yup.string().required('required'),
 });
 const initialValues = {
   amount: '',
-  typeOfInvestment: '',
+  category: '',
   date: '',
+  duration: '',
+  currency: '',
+  risk: '',
+  liquidity: '',
 };
 
 export default InvestmentForm;

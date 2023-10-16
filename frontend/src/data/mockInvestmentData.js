@@ -1,0 +1,32 @@
+export const mockDataInvestments = [
+  {
+    id: 1,
+    amount: 1000.5,
+    category: 'Salary',
+    date: '2023-10-13',
+    duration: '< 1 year',
+    currency: 'AUD',
+    risk: 'low',
+    liquidity: 'highly liquid',
+  },
+  {
+    id: 2,
+    amount: 10000,
+    category: 'Salary',
+    date: '2023-10-13',
+    duration: '1-5 years',
+    currency: 'AUD',
+    risk: 'moderate',
+    liquidity: 'moderately liquid',
+  },
+  {
+    id: 3,
+    amount: 500.5,
+    category: 'Salary',
+    date: '2023-10-13',
+    duration: '> 5 years',
+    currency: 'AUD',
+    risk: 'high',
+    liquidity: 'illiquid',
+  },
+];

@@ -10,10 +10,29 @@ import {
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import Header from '../../components/Header';
+import { addExpense } from '../../apis/Expense';
 
 const ExpenseForm = () => {
+  const userId = localStorage.getItem('id');
+
   const handleFormSubmit = values => {
-    console.log(values);
+    const updatedData = {
+      amount: values.amount,
+      category: values.category,
+      date: values.date,
+      location: values.location,
+      currency: values.currency,
+      status: values.status,
+      paymentMethod: values.paymentMethod,
+      user_id: userId,
+    };
+
+    const isSuccess = addExpense({
+      ...updatedData,
+    });
+
+    if (isSuccess) {
+    }
   };
 
   return (
@@ -54,20 +73,6 @@ const ExpenseForm = () => {
                 sx={{ gridColumn: 'span 2' }}
                 inputProps={{ step: '0.01' }}
               />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Description"
-                placeholder="Description"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.description}
-                name="description"
-                error={!!touched.description && !!errors.description}
-                helperText={touched.description && errors.description}
-                sx={{ gridColumn: 'span 2' }}
-              />
               <FormControl
                 fullWidth
                 variant="filled"
@@ -89,26 +94,12 @@ const ExpenseForm = () => {
                   <MenuItem value="Others">Others</MenuItem>
                 </Select>
               </FormControl>
-              {/* <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Type Of Investment"
-                  placeholder="Type Of Investment"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.typeOfInvestment}
-                  name="typeOfIncome"
-                  error={!!touched.typeOfInvestment && !!errors.typeOfInvestment}
-                  helperText={touched.typeOfInvestment && errors.typeOfInvestment}
-                  sx={{ gridColumn: 'span 2' }}
-                /> */}
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
                 label="Date"
-                placeholder="dd-MM-yyyy"
+                placeholder="yyyy-MM-dd"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.date}
@@ -117,10 +108,75 @@ const ExpenseForm = () => {
                 helperText={touched.date && errors.date}
                 sx={{ gridColumn: 'span 2' }}
               />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Location"
+                placeholder="Location"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.location}
+                name="location"
+                error={!!touched.location && !!errors.location}
+                helperText={touched.location && errors.location}
+                sx={{ gridColumn: 'span 2' }}
+              />
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Currency</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="currency"
+                >
+                  <MenuItem value="AUD">AUD</MenuItem>
+                  <MenuItem value="USD">USD</MenuItem>
+                  <MenuItem value="VND">VND</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Status</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="status"
+                >
+                  <MenuItem value="Pending">Pending</MenuItem>
+                  <MenuItem value="Completed">Completed</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Payment Method</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="paymentMethod"
+                >
+                  <MenuItem value="Cash">Cash</MenuItem>
+                  <MenuItem value="Debit Card">Debit Card</MenuItem>
+                  <MenuItem value="Credit Card">Credit Card</MenuItem>
+                  <MenuItem value="Bank Transfers">Bank Transfers</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Create Expense
+                Create New Expense
               </Button>
             </Box>
           </form>
@@ -130,20 +186,28 @@ const ExpenseForm = () => {
   );
 };
 
-const dateRegExp = '\\d{2}-\\d{2}-\\d{4}';
+const dateRegExp = '\\d{4}-\\d{2}-\\d{2}';
 
 const checkoutSchema = yup.object().shape({
   amount: yup.string().required('required'),
-  typeOfInvestment: yup.string().required('required'),
+  category: yup.string().required('required'),
   date: yup
     .string()
     .matches(dateRegExp, 'Date format is not valid')
     .required('required'),
+  location: yup.string().required('required'),
+  currency: yup.string().required('required'),
+  status: yup.string().required('required'),
+  paymentMethod: yup.string().required('required'),
 });
 const initialValues = {
   amount: '',
-  typeOfInvestment: '',
+  category: '',
   date: '',
+  location: '',
+  currency: '',
+  status: '',
+  paymentMethod: '',
 };
 
 export default ExpenseForm;

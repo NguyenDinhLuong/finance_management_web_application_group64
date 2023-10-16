@@ -17,6 +17,10 @@ import IncomeForm from './scenes/form/incomeForm';
 import InvestmentForm from './scenes/form/investmentForm';
 import ExpenseForm from './scenes/form/expenseForm';
 import RecurringExpenseForm from './scenes/form/recurringExpenseForm';
+import Incomes from './scenes/incomes';
+import Investments from './scenes/investments';
+import Expenses from './scenes/expenses';
+import RecurringExpenses from './scenes/recurringExpenses';
 
 export default function App() {
   return (
@@ -29,6 +33,10 @@ export default function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/team" element={<Team />} />
             <Route path="/contacts" element={<Contacts />} />
+            <Route path="/incomes" element={<Incomes />} />
+            <Route path="/investments" element={<Investments />} />
+            <Route path="/expenses" element={<Expenses />} />
+            <Route path="/recurringExpenses" element={<RecurringExpenses />} />
             <Route path="/invoices" element={<Invoices />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/incomeForm" element={<IncomeForm />} />

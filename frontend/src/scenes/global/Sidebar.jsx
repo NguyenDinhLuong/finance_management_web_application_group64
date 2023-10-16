@@ -18,6 +18,9 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import PaidIcon from '@mui/icons-material/Paid';
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -114,6 +117,20 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: '15px 0 5px 20px' }}
+            >
+              Personal
+            </Typography>
+            <Item
+              title="Profile"
+              to="/profile"
+              icon={<PersonOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
             <Typography
               variant="h6"
@@ -165,6 +182,41 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <Item
+              title="Incomes Information"
+              to="/incomes"
+              icon={<FormatListBulletedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Investments Information"
+              to="/investments"
+              icon={<FormatListNumberedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Expense Information"
+              to="/expenses"
+              icon={<ReceiptOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Recurring Expense Info"
+              to="/recurringExpenses"
+              icon={<ReceiptOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Upload receipts"
+              to="/uploadReceipts"
+              icon={<DriveFolderUploadIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
               title="Contacts Information"
               to="/contacts"
               icon={<ContactsOutlinedIcon />}
@@ -178,22 +230,6 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: '15px 0 5px 20px' }}
-            >
-              Pages
-            </Typography>
-            <Item
-              title="Profile"
-              to="/profile"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
             <Typography
               variant="h6"
               color={colors.grey[300]}

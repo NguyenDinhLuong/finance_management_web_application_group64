@@ -10,10 +10,29 @@ import {
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import Header from '../../components/Header';
+import { addIncome } from '../../apis/Income';
 
 const IncomeForm = () => {
+  const userId = localStorage.getItem('id');
+
   const handleFormSubmit = values => {
-    console.log(values);
+    const updatedData = {
+      amount: values.amount,
+      source: values.source,
+      category: values.category,
+      date: values.date,
+      status: values.status,
+      location: values.location,
+      currency: values.currency,
+      user_id: userId,
+    };
+
+    const isSuccess = addIncome({
+      ...updatedData,
+    });
+
+    if (isSuccess) {
+    }
   };
 
   return (
@@ -92,7 +111,7 @@ const IncomeForm = () => {
                 variant="filled"
                 type="text"
                 label="Date"
-                placeholder="dd-MM-yyyy"
+                placeholder="yyyy-MM-dd"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.date}
@@ -101,6 +120,54 @@ const IncomeForm = () => {
                 helperText={touched.date && errors.date}
                 sx={{ gridColumn: 'span 2' }}
               />
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Status</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="status"
+                >
+                  <MenuItem value="Pending">Pending</MenuItem>
+                  <MenuItem value="Received">Received</MenuItem>
+                  <MenuItem value="Overdue">Overdue</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Location"
+                placeholder="Location"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.location}
+                name="location"
+                error={!!touched.location && !!errors.location}
+                helperText={touched.location && errors.location}
+                sx={{ gridColumn: 'span 2' }}
+              />
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Currency</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="currency"
+                >
+                  <MenuItem value="AUD">AUD</MenuItem>
+                  <MenuItem value="USD">USD</MenuItem>
+                  <MenuItem value="VND">VND</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
@@ -114,12 +181,12 @@ const IncomeForm = () => {
   );
 };
 
-const dateRegExp = '\\d{2}-\\d{2}-\\d{4}';
+const dateRegExp = '\\d{4}-\\d{2}-\\d{2}';
 
 const checkoutSchema = yup.object().shape({
   amount: yup.string().required('required'),
   source: yup.string().required('required'),
-  typeOfIncome: yup.string().required('required'),
+  category: yup.string().required('required'),
   date: yup
     .string()
     .matches(dateRegExp, 'Date format is not valid')
@@ -128,8 +195,12 @@ const checkoutSchema = yup.object().shape({
 const initialValues = {
   amount: '',
   source: '',
-  typeOfIncome: '',
+  category: '',
   date: '',
+  status: '',
+  location: '',
+  currency: '',
+  user_id: '',
 };
 
 export default IncomeForm;

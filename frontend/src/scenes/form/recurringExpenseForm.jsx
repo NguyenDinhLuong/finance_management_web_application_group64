@@ -10,10 +10,29 @@ import {
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import Header from '../../components/Header';
+import { addRecurringExpense } from '../../apis/Expense';
 
 const RecurringExpenseForm = () => {
+  const userId = localStorage.getItem('id');
+
   const handleFormSubmit = values => {
-    console.log(values);
+    const updatedData = {
+      amount: values.amount,
+      category: values.category,
+      startDate: values.startDate,
+      location: values.location,
+      currency: values.currency,
+      frequency: values.frequency,
+      endDate: values.endDate,
+      user_id: userId,
+    };
+
+    const isSuccess = addRecurringExpense({
+      ...updatedData,
+    });
+
+    if (isSuccess) {
+    }
   };
 
   return (
@@ -57,20 +76,6 @@ const RecurringExpenseForm = () => {
                 sx={{ gridColumn: 'span 2' }}
                 inputProps={{ step: '0.01' }}
               />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Description"
-                placeholder="Description"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.description}
-                name="description"
-                error={!!touched.description && !!errors.description}
-                helperText={touched.description && errors.description}
-                sx={{ gridColumn: 'span 2' }}
-              />
               <FormControl
                 fullWidth
                 variant="filled"
@@ -94,32 +99,35 @@ const RecurringExpenseForm = () => {
                   <MenuItem value="Others">Others</MenuItem>
                 </Select>
               </FormControl>
-              {/* <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Type Of Investment"
-                    placeholder="Type Of Investment"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.typeOfInvestment}
-                    name="typeOfIncome"
-                    error={!!touched.typeOfInvestment && !!errors.typeOfInvestment}
-                    helperText={touched.typeOfInvestment && errors.typeOfInvestment}
-                    sx={{ gridColumn: 'span 2' }}
-                  /> */}
+              <FormControl
+                fullWidth
+                variant="filled"
+                sx={{ gridColumn: 'span 2' }}
+              >
+                <InputLabel id="dropdown-label">Currency</InputLabel>
+                <Select
+                  labelId="dropdown-label"
+                  value={values.dropdown}
+                  onChange={handleChange}
+                  name="currency"
+                >
+                  <MenuItem value="AUD">AUD</MenuItem>
+                  <MenuItem value="USD">USD</MenuItem>
+                  <MenuItem value="VND">VND</MenuItem>
+                </Select>
+              </FormControl>
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Start Date"
-                placeholder="dd-MM-yyyy"
+                label="Location"
+                placeholder="location"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.startDate}
-                name="startDate"
-                error={!!touched.startDate && !!errors.startDate}
-                helperText={touched.startDate && errors.startDate}
+                value={values.location}
+                name="location"
+                error={!!touched.location && !!errors.location}
+                helperText={touched.location && errors.location}
                 sx={{ gridColumn: 'span 2' }}
               />
               <FormControl
@@ -145,8 +153,22 @@ const RecurringExpenseForm = () => {
                 fullWidth
                 variant="filled"
                 type="text"
+                label="Start Date"
+                placeholder="yyyy-MM-dd"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.startDate}
+                name="startDate"
+                error={!!touched.startDate && !!errors.startDate}
+                helperText={touched.startDate && errors.startDate}
+                sx={{ gridColumn: 'span 2' }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
                 label="End Date"
-                placeholder="dd-MM-yyyy"
+                placeholder="yyyy-MM-dd"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.endDate}
@@ -168,20 +190,31 @@ const RecurringExpenseForm = () => {
   );
 };
 
-const dateRegExp = '\\d{2}-\\d{2}-\\d{4}';
+const dateRegExp = '\\d{4}-\\d{2}-\\d{2}';
 
 const checkoutSchema = yup.object().shape({
   amount: yup.string().required('required'),
-  typeOfInvestment: yup.string().required('required'),
-  date: yup
+  category: yup.string().required('required'),
+  frequency: yup.string().required('required'),
+  location: yup.string().required('required'),
+  currency: yup.string().required('required'),
+  startDate: yup
+    .string()
+    .matches(dateRegExp, 'Date format is not valid')
+    .required('required'),
+  endDate: yup
     .string()
     .matches(dateRegExp, 'Date format is not valid')
     .required('required'),
 });
 const initialValues = {
   amount: '',
-  typeOfInvestment: '',
-  date: '',
+  category: '',
+  frequency: '',
+  location: '',
+  currency: '',
+  startDate: '',
+  endDate: '',
 };
 
 export default RecurringExpenseForm;
