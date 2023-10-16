@@ -22,15 +22,15 @@ public class DashboardTests {
     @BeforeAll
     public static void generateTestData() {
         ArrayList<Expenses> testExpenses = new ArrayList<Expenses>();
-        testExpenses.add(new Expenses(1, "fuel", 20.0, "AUD", "sample desc1", LocalDate.of(2023, 10, 12)));
-        testExpenses.add(new Expenses(2, "fuel", 65.6, "AUD", "sample desc2", LocalDate.of(2023, 10, 13)));
-        testExpenses.add(new Expenses(3, "fuel", 40.5, "AUD", "sample desc3", LocalDate.of(2023, 10, 12)));
-        testExpenses.add(new Expenses(4, "shopping", 20.0, "AUD", "sample desc4", LocalDate.of(2023, 9, 1)));
-        testExpenses.add(new Expenses(5, "shopping", 234.0, "AUD", "sample desc5", LocalDate.of(2023, 9, 4)));
-        testExpenses.add(new Expenses(6, "shopping", 105.5, "AUD", "sample desc6", LocalDate.of(2023, 9, 14)));
-        testExpenses.add(new Expenses(7, "groceries", 233.4, "AUD", "sample desc7", LocalDate.of(2023, 8, 29)));
-        testExpenses.add(new Expenses(8, "groceries", 22.3, "AUD", "sample desc8", LocalDate.of(2023, 8, 19)));
-        testExpenses.add(new Expenses(9, "groceries", 5.5, "AUD", "sample desc9", LocalDate.of(2023, 8, 12)));
+        testExpenses.add(new Expenses(1L, "fuel", 20.0, "AUD", "sample desc1", LocalDate.of(2023, 10, 12)));
+        testExpenses.add(new Expenses(2L, "fuel", 65.6, "AUD", "sample desc2", LocalDate.of(2023, 10, 13)));
+        testExpenses.add(new Expenses(3L, "fuel", 40.5, "AUD", "sample desc3", LocalDate.of(2023, 10, 12)));
+        testExpenses.add(new Expenses(4L, "shopping", 20.0, "AUD", "sample desc4", LocalDate.of(2023, 9, 1)));
+        testExpenses.add(new Expenses(5L, "shopping", 234.0, "AUD", "sample desc5", LocalDate.of(2023, 9, 4)));
+        testExpenses.add(new Expenses(6L, "shopping", 105.5, "AUD", "sample desc6", LocalDate.of(2023, 9, 14)));
+        testExpenses.add(new Expenses(7L, "groceries", 233.4, "AUD", "sample desc7", LocalDate.of(2023, 8, 29)));
+        testExpenses.add(new Expenses(8L, "groceries", 22.3, "AUD", "sample desc8", LocalDate.of(2023, 8, 19)));
+        testExpenses.add(new Expenses(9L, "groceries", 5.5, "AUD", "sample desc9", LocalDate.of(2023, 8, 12)));
 
         expenses = testExpenses;
 
@@ -40,9 +40,9 @@ public class DashboardTests {
     public void testGetExpensesByMonth() {
 
         ArrayList<Expenses> expensesInOctober = new ArrayList<>();
-        expensesInOctober.add(new Expenses(1, "fuel", 20.0, "AUD", "sample desc1", LocalDate.of(2023, 10, 12)));
-        expensesInOctober.add(new Expenses(2, "fuel", 65.6, "AUD", "sample desc2", LocalDate.of(2023, 10, 13)));
-        expensesInOctober.add(new Expenses(3, "fuel", 40.5, "AUD", "sample desc3", LocalDate.of(2023, 10, 12)));
+        expensesInOctober.add(new Expenses(1L, "fuel", 20.0, "AUD", "sample desc1", LocalDate.of(2023, 10, 12)));
+        expensesInOctober.add(new Expenses(2L, "fuel", 65.6, "AUD", "sample desc2", LocalDate.of(2023, 10, 13)));
+        expensesInOctober.add(new Expenses(3L, "fuel", 40.5, "AUD", "sample desc3", LocalDate.of(2023, 10, 12)));
 
         Dashboard dashboard = new Dashboard();
         ArrayList<Expenses> compareTo = dashboard.getExpensesByMonth(expenses, 10);

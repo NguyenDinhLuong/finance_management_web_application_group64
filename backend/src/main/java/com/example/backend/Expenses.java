@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Expenses {
 
-    private final int id;
+    private final Long id;
     private final String category;
     private final Double amount;
     private final String currency;
@@ -12,7 +12,7 @@ public class Expenses {
     private final LocalDate date;
 
 
-    public Expenses(int id, String category, Double amount, String currency, String description, LocalDate date) {
+    public Expenses(Long id, String category, Double amount, String currency, String description, LocalDate date) {
         this.id = id;
         this.category = category;
         this.amount = amount;
@@ -21,7 +21,7 @@ public class Expenses {
         this.date = date;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

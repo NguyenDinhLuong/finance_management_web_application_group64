@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -23,9 +24,11 @@ public class NormalExpense {
     private String description;
     @Column(nullable = false)
     private String category;
+    @Column(nullable = false)
+    private String currency;
     @DateTimeFormat(pattern = "yyyy-MM-dd") // changed to match LocalDate format
     @Column(nullable = false)
-    private Date date;
+    private LocalDate date;
     @Column(nullable = true)
     private Integer frequency;
     @Column(nullable = true)
@@ -35,10 +38,11 @@ public class NormalExpense {
     private User user;
 
 
-    public NormalExpense(Double amount, String description, String category, Date date, Integer frequency, Date endDate) {
+    public NormalExpense(Double amount, String description, String category, String currency, LocalDate date, Integer frequency, Date endDate) {
         this.amount = amount;
         this.description = description;
         this.category = category;
+        this.currency = currency;
         this.date = date;
         this.frequency = frequency;
         this.endDate = endDate;
