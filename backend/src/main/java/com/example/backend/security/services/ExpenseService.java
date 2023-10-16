@@ -18,4 +18,6 @@ public class ExpenseService {
     public NormalExpense addExpense(NormalExpense expense) {
         return expenseRepository.save(expense);
     }
+
+    public ArrayList<Expense>
 }
