@@ -1,13 +1,9 @@
 package com.example.backend.controller;
 
-import com.example.backend.model.Income;
 import com.example.backend.model.NormalExpense;
-import com.example.backend.model.RecurringExpense;
 import com.example.backend.payload.request.AddExpenseRequest;
-import com.example.backend.payload.request.AddRecurringExpenseRequest;
 import com.example.backend.payload.response.MessageResponse;
 import com.example.backend.security.services.ExpenseService;
-import com.example.backend.security.services.RecurringExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/expenses")
 public class ExpenseController {
-
     @Autowired
     private ExpenseService expenseService;
 
@@ -38,5 +33,16 @@ public class ExpenseController {
     public ResponseEntity<List<NormalExpense>> getAllExpenses() {
         List<NormalExpense> expenses = expenseService.getAllExpenses();
         return ResponseEntity.ok(expenses);
+    }
+
+    @PutMapping("/updateCurrencyExchange/{inputCurrency}/{outputCurrency}")
+    public ResponseEntity<List<NormalExpense>> updateAllExpensesAfterCurrencyExchange(@PathVariable String inputCurrency, @PathVariable String outputCurrency) {
+
+        List<NormalExpense> updatedExpenses = expenseService.updateAllExpensesAfterCurrencyExchange(inputCurrency, outputCurrency);
+
+        if(updatedExpenses.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content if no incomes are found/updated
+        }
+        return ResponseEntity.ok(updatedExpenses); // Return 200 OK with the list of updated incomes
     }
 }

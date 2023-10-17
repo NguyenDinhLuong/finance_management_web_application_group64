@@ -34,4 +34,15 @@ public class RecurringExpenseController {
         List<RecurringExpense> recurringExpenses = recurringExpenseService.getAllRecurringExpenses();
         return ResponseEntity.ok(recurringExpenses);
     }
+
+    @PutMapping("/updateCurrencyExchange/{inputCurrency}/{outputCurrency}")
+    public ResponseEntity<List<RecurringExpense>> updateAllRecurringExpensesAfterCurrencyExchange(@PathVariable String inputCurrency, @PathVariable String outputCurrency) {
+
+        List<RecurringExpense> updatedRecurringExpenses = recurringExpenseService.updateAllRecurringExpensesAfterCurrencyExchange(inputCurrency, outputCurrency);
+
+        if(updatedRecurringExpenses.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content if no incomes are found/updated
+        }
+        return ResponseEntity.ok(updatedRecurringExpenses); // Return 200 OK with the list of updated incomes
+    }
 }

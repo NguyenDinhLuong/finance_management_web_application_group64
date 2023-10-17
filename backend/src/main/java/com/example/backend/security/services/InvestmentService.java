@@ -1,15 +1,12 @@
 package com.example.backend.security.services;
 
-import com.example.backend.model.Income;
 import com.example.backend.model.Investment;
 import com.example.backend.model.User;
-import com.example.backend.payload.request.AddIncomeRequest;
 import com.example.backend.payload.request.AddInvestmentRequest;
 import com.example.backend.repository.InvestmentRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +18,13 @@ public class InvestmentService {
     private final InvestmentRepository investmentRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private final CurrencyExchangeService currencyExchangeService;
 
     @Autowired
-    public InvestmentService(InvestmentRepository investmentRepository) {
+    public InvestmentService(InvestmentRepository investmentRepository, CurrencyExchangeService currencyExchangeService) {
         this.investmentRepository = investmentRepository;
+        this.currencyExchangeService = currencyExchangeService;
     }
 
     @Transactional
@@ -36,7 +36,6 @@ public class InvestmentService {
         investment.setCategory(addInvestmentRequest.getCategory());
         investment.setDate(addInvestmentRequest.getDate());
         investment.setDuration(addInvestmentRequest.getDuration());
-        investment.setCurrency(addInvestmentRequest.getCurrency());
         investment.setRisk(addInvestmentRequest.getRisk());
         investment.setLiquidity(addInvestmentRequest.getLiquidity());
         investment.setUser(user);
@@ -46,5 +45,22 @@ public class InvestmentService {
 
     public List<Investment> getAllInvestments() {
         return investmentRepository.findAll();
+    }
+
+    public List<Investment> updateAllInvestmentsAfterCurrencyExchange(String inputCurrency,String outputCurrency) {
+        List<Investment> investments = investmentRepository.findAll();
+
+        // Convert each income's amount based on the currency rates
+        for (Investment investment : investments) {
+            try {
+                double convertedAmount = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) investment.getAmount());
+                investment.setAmount((float) convertedAmount);
+                investmentRepository.save(investment);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return investments;
     }
 }

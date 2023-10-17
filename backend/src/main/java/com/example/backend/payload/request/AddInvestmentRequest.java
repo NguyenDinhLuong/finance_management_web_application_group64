@@ -16,8 +16,6 @@ public class AddInvestmentRequest {
     @NotBlank
     private String duration;
     @NotBlank
-    private String currency;
-    @NotBlank
     private String risk;
     @NotBlank
     private String liquidity;

@@ -23,7 +23,6 @@ public class NormalExpense {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
     private String location;
-    private String currency;
     private String status;
     private String paymentMethod;
 
@@ -32,12 +31,11 @@ public class NormalExpense {
     @JsonIgnore
     private User user;
 
-    public NormalExpense(float amount, String category, Date date, String location, String currency, String status, String paymentMethod) {
+    public NormalExpense(float amount, String category, Date date, String location, String status, String paymentMethod) {
         this.amount = amount;
         this.category = category;
         this.date = date;
         this.location = location;
-        this.currency = currency;
         this.status = status;
         this.paymentMethod = paymentMethod;
     }

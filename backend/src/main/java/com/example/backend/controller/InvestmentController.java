@@ -35,5 +35,17 @@ public class InvestmentController {
         List<Investment> investments = investmentService.getAllInvestments();
         return ResponseEntity.ok(investments);
     }
+
+    @PutMapping("/updateCurrencyExchange/{inputCurrency}/{outputCurrency}")
+    public ResponseEntity<List<Investment>> updateAllInvestmentsAfterCurrencyExchange(@PathVariable String inputCurrency, @PathVariable String outputCurrency) {
+
+        List<Investment> updatedInvestments = investmentService.updateAllInvestmentsAfterCurrencyExchange(inputCurrency, outputCurrency);
+
+        if(updatedInvestments.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content if no incomes are found/updated
+        }
+
+        return ResponseEntity.ok(updatedInvestments); // Return 200 OK with the list of updated incomes
+    }
 }
 

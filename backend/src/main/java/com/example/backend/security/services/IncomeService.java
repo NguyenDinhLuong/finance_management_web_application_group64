@@ -3,7 +3,6 @@ package com.example.backend.security.services;
 import com.example.backend.model.Income;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddIncomeRequest;
-import com.example.backend.payload.request.UpdateUserRequest;
 import com.example.backend.repository.IncomeRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,10 +17,13 @@ public class IncomeService  {
     private final IncomeRepository incomeRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private final CurrencyExchangeService currencyExchangeService;
 
     @Autowired
-    public IncomeService(IncomeRepository incomeRepository) {
+    public IncomeService(IncomeRepository incomeRepository, CurrencyExchangeService currencyExchangeService) {
         this.incomeRepository = incomeRepository;
+        this.currencyExchangeService = currencyExchangeService;
     }
 
     @Transactional
@@ -35,7 +37,6 @@ public class IncomeService  {
         income.setDate(addIncomeRequest.getDate());
         income.setStatus(addIncomeRequest.getStatus());
         income.setLocation(addIncomeRequest.getLocation());
-        income.setCurrency(addIncomeRequest.getCurrency());
         income.setUser(user);
         incomeRepository.save(income);
         return income;
@@ -45,24 +46,21 @@ public class IncomeService  {
         return incomeRepository.findAll();
     }
 
-    public Income getIncomeById(Long id) {
-        return incomeRepository.findById(id).orElse(null);
-    }
+    public List<Income> updateAllIncomesAfterCurrencyExchange(String inputCurrency,String outputCurrency) {
+        List<Income> incomes = incomeRepository.findAll();
 
-    public Income updateIncome(Long id, Income income) {
-        if (incomeRepository.existsById(id)) {
-            income.setId(id); // Ensure the ID is set on the income object
-            return incomeRepository.save(income);
+        // Convert each income's amount based on the currency rates
+        for (Income income : incomes) {
+            try {
+                double convertedAmount = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) income.getAmount());
+                income.setAmount((float) convertedAmount);
+                incomeRepository.save(income);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return null;
-    }
 
-    public boolean deleteIncome(Long id) {
-        if (incomeRepository.existsById(id)) {
-            incomeRepository.deleteById(id);
-            return true;
-        }
-        return false;
+        return incomes;
     }
 }
 

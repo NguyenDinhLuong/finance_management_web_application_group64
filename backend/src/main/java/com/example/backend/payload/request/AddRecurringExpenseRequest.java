@@ -16,8 +16,6 @@ public class AddRecurringExpenseRequest {
     @NotBlank
     private String location;
     @NotBlank
-    private String currency;
-    @NotBlank
     private String frequency;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;

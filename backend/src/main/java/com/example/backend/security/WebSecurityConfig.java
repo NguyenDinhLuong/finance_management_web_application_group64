@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.backend.security.jwt.AuthEntryPointJwt;
 import com.example.backend.security.jwt.AuthTokenFilter;
 import com.example.backend.security.services.UserDetailsServiceImpl;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableMethodSecurity
@@ -52,6 +53,11 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
 //  @Override
 //  protected void configure(HttpSecurity http) throws Exception {
 //    http.cors().and().csrf().disable()
@@ -75,6 +81,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/expenses/**").permitAll()
                                 .requestMatchers("/api/investment/**").permitAll()
                                 .requestMatchers("/api/recurringExpenses/**").permitAll()
+                                .requestMatchers("/api/currency/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 

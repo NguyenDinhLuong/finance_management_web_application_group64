@@ -19,10 +19,13 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private final CurrencyExchangeService currencyExchangeService;
 
     @Autowired
-    public ExpenseService(ExpenseRepository expenseRepository) {
+    public ExpenseService(ExpenseRepository expenseRepository, CurrencyExchangeService currencyExchangeService) {
         this.expenseRepository = expenseRepository;
+        this.currencyExchangeService = currencyExchangeService;
     }
 
     @Transactional
@@ -35,7 +38,6 @@ public class ExpenseService {
         expense.setCategory(addExpenseRequest.getCategory());
         expense.setDate(addExpenseRequest.getDate());
         expense.setLocation(addExpenseRequest.getLocation());
-        expense.setCurrency(addExpenseRequest.getCurrency());
         expense.setStatus(addExpenseRequest.getStatus());
         expense.setPaymentMethod(addExpenseRequest.getPaymentMethod());
         expense.setUser(user);
@@ -45,5 +47,22 @@ public class ExpenseService {
 
     public List<NormalExpense> getAllExpenses() {
         return expenseRepository.findAll();
+    }
+
+    public List<NormalExpense> updateAllExpensesAfterCurrencyExchange(String inputCurrency,String outputCurrency) {
+        List<NormalExpense> expenses = expenseRepository.findAll();
+
+        // Convert each income's amount based on the currency rates
+        for (NormalExpense expense : expenses) {
+            try {
+                double convertedAmount = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) expense.getAmount());
+                expense.setAmount((float) convertedAmount);
+                expenseRepository.save(expense);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return expenses;
     }
 }

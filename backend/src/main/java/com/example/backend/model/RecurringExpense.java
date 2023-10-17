@@ -22,7 +22,6 @@ public class RecurringExpense {
     private String category;
     private String frequency;
     private String location;
-    private String currency;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -33,12 +32,11 @@ public class RecurringExpense {
     @JsonIgnore
     private User user;
 
-    public RecurringExpense(float amount, String category, String frequency, String location, String currency, Date startDate, Date endDate) {
+    public RecurringExpense(float amount, String category, String frequency, String location, Date startDate, Date endDate) {
         this.amount = amount;
         this.category = category;
         this.frequency = frequency;
         this.location = location;
-        this.currency = currency;
         this.startDate = startDate;
         this.endDate = endDate;
     }

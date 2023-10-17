@@ -16,15 +16,11 @@ public class AddIncomeRequest {
     private String source;
     @NotBlank
     private String category;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
     @NotBlank
     private String status;
     @NotBlank
     private String location;
-    @NotBlank
-    private String currency;
-
     private Long user_id;
 }

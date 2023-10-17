@@ -16,8 +16,6 @@ public class AddExpenseRequest {
     @NotBlank
     private String location;
     @NotBlank
-    private String currency;
-    @NotBlank
     private String status;
     @NotBlank
     private String paymentMethod;
