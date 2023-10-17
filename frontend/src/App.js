@@ -12,7 +12,6 @@ import Bar from './scenes/bar';
 import Profile from './scenes/form';
 import Line from './scenes/line';
 import Pie from './scenes/pie';
-import Geography from './scenes/geography';
 import IncomeForm from './scenes/form/incomeForm';
 import InvestmentForm from './scenes/form/investmentForm';
 import ExpenseForm from './scenes/form/expenseForm';
@@ -21,6 +20,8 @@ import Incomes from './scenes/incomes';
 import Investments from './scenes/investments';
 import Expenses from './scenes/expenses';
 import RecurringExpenses from './scenes/recurringExpenses';
+import AdminDashboard from './scenes/adminDashboard';
+import PrivateRouteAdmin from './components/PrivateRouteAdmin/PrivateRouteAdmin';
 
 export default function App() {
   return (
@@ -49,7 +50,11 @@ export default function App() {
             <Route path="/bar" element={<Bar />} />
             <Route path="/pie" element={<Pie />} />
             <Route path="/line" element={<Line />} />
-            <Route path="/geography" element={<Geography />} />
+          </Route>
+        </Route>
+        <Route path="/" element={<PrivateRouteAdmin />}>
+          <Route path="/" element={<Home />}>
+            <Route path="/admin" element={<AdminDashboard />} />
           </Route>
         </Route>
       </Routes>

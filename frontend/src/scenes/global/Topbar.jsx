@@ -36,6 +36,7 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
   const refreshToken = getRefreshToken();
+  const role = localStorage.getItem('role');
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCurrency, setSelectedCurrency] = useState(
@@ -131,29 +132,35 @@ const Topbar = () => {
             <LightModeOutlinedIcon />
           )}
         </IconButton>
-        <IconButton>
-          <NotificationsOutlinedIcon />
-        </IconButton>
-        <IconButton onClick={handleClick}>
-          <CurrencyExchangeIcon />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-        >
-          {currencies.map(currency => (
-            <MenuItem
-              key={currency.code}
-              onClick={() => handleMenuItemClick(currency.code)}
+        {role === 'ROLE_USER' && (
+          <IconButton>
+            <NotificationsOutlinedIcon />
+          </IconButton>
+        )}
+        {role === 'ROLE_USER' && (
+          <>
+            <IconButton onClick={handleClick}>
+              <CurrencyExchangeIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)}
             >
-              {currency.flag} {currency.code}
-              {selectedCurrency === currency.code && (
-                <Check style={{ color: 'green', marginLeft: 'auto' }} />
-              )}
-            </MenuItem>
-          ))}
-        </Menu>
+              {currencies.map(currency => (
+                <MenuItem
+                  key={currency.code}
+                  onClick={() => handleMenuItemClick(currency.code)}
+                >
+                  {currency.flag} {currency.code}
+                  {selectedCurrency === currency.code && (
+                    <Check style={{ color: 'green', marginLeft: 'auto' }} />
+                  )}
+                </MenuItem>
+              ))}
+            </Menu>
+          </>
+        )}
         <IconButton onClick={handleLogout}>
           <LogoutIcon />
         </IconButton>

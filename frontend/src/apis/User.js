@@ -40,6 +40,7 @@ export const login = async ({ username, password }) => {
       localStorage.setItem('firstName', response.data.firstName);
       localStorage.setItem('lastName', response.data.lastName);
       localStorage.setItem('id', response.data.id);
+      localStorage.setItem('role', response.data.role.replace(/^\[|\]$/g, ''));
       return true;
     })
     .catch(error => {
