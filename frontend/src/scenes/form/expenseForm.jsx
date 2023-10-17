@@ -21,7 +21,7 @@ const ExpenseForm = () => {
       category: values.category,
       date: values.date,
       location: values.location,
-      currency: values.currency,
+      currency: localStorage.getItem('currentCurrency'),
       status: values.status,
       paymentMethod: values.paymentMethod,
       user_id: userId,
@@ -127,23 +127,6 @@ const ExpenseForm = () => {
                 variant="filled"
                 sx={{ gridColumn: 'span 2' }}
               >
-                <InputLabel id="dropdown-label">Currency</InputLabel>
-                <Select
-                  labelId="dropdown-label"
-                  value={values.dropdown}
-                  onChange={handleChange}
-                  name="currency"
-                >
-                  <MenuItem value="AUD">AUD</MenuItem>
-                  <MenuItem value="USD">USD</MenuItem>
-                  <MenuItem value="VND">VND</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl
-                fullWidth
-                variant="filled"
-                sx={{ gridColumn: 'span 2' }}
-              >
                 <InputLabel id="dropdown-label">Status</InputLabel>
                 <Select
                   labelId="dropdown-label"
@@ -196,7 +179,6 @@ const checkoutSchema = yup.object().shape({
     .matches(dateRegExp, 'Date format is not valid')
     .required('required'),
   location: yup.string().required('required'),
-  currency: yup.string().required('required'),
   status: yup.string().required('required'),
   paymentMethod: yup.string().required('required'),
 });

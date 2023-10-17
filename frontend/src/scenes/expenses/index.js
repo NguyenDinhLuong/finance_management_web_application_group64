@@ -49,11 +49,6 @@ const Expenses = () => {
       flex: 1,
     },
     {
-      field: 'currency',
-      headerName: 'Currency',
-      flex: 1,
-    },
-    {
       field: 'status',
       headerName: 'Status',
       flex: 1,

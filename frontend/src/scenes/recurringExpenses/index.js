@@ -47,11 +47,6 @@ const RecurringExpenses = () => {
       flex: 1,
     },
     {
-      field: 'currency',
-      headerName: 'Currency',
-      flex: 1,
-    },
-    {
       field: 'startDate',
       headerName: 'Start Date',
       type: 'date',

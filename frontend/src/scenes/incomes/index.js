@@ -56,11 +56,6 @@ const Incomes = () => {
       headerName: 'Location',
       flex: 1,
     },
-    {
-      field: 'currency',
-      headerName: 'Currency',
-      flex: 1,
-    },
   ];
 
   return (

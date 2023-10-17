@@ -23,7 +23,6 @@ const IncomeForm = () => {
       date: values.date,
       status: values.status,
       location: values.location,
-      currency: values.currency,
       user_id: userId,
     };
 
@@ -151,23 +150,6 @@ const IncomeForm = () => {
                 helperText={touched.location && errors.location}
                 sx={{ gridColumn: 'span 2' }}
               />
-              <FormControl
-                fullWidth
-                variant="filled"
-                sx={{ gridColumn: 'span 2' }}
-              >
-                <InputLabel id="dropdown-label">Currency</InputLabel>
-                <Select
-                  labelId="dropdown-label"
-                  value={values.dropdown}
-                  onChange={handleChange}
-                  name="currency"
-                >
-                  <MenuItem value="AUD">AUD</MenuItem>
-                  <MenuItem value="USD">USD</MenuItem>
-                  <MenuItem value="VND">VND</MenuItem>
-                </Select>
-              </FormControl>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
@@ -191,6 +173,8 @@ const checkoutSchema = yup.object().shape({
     .string()
     .matches(dateRegExp, 'Date format is not valid')
     .required('required'),
+  status: yup.string().required('required'),
+  location: yup.string().required('required'),
 });
 const initialValues = {
   amount: '',
@@ -199,7 +183,6 @@ const initialValues = {
   date: '',
   status: '',
   location: '',
-  currency: '',
   user_id: '',
 };
 

@@ -21,7 +21,7 @@ const InvestmentForm = () => {
       category: values.category,
       date: values.date,
       duration: values.duration,
-      currency: values.currency,
+      currency: localStorage.getItem('currentCurrency'),
       risk: values.risk,
       liquidity: values.liquidity,
       user_id: userId,
@@ -129,23 +129,6 @@ const InvestmentForm = () => {
                 variant="filled"
                 sx={{ gridColumn: 'span 2' }}
               >
-                <InputLabel id="dropdown-label">Currency</InputLabel>
-                <Select
-                  labelId="dropdown-label"
-                  value={values.dropdown}
-                  onChange={handleChange}
-                  name="currency"
-                >
-                  <MenuItem value="AUD">AUD</MenuItem>
-                  <MenuItem value="USD">USD</MenuItem>
-                  <MenuItem value="VND">VND</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl
-                fullWidth
-                variant="filled"
-                sx={{ gridColumn: 'span 2' }}
-              >
                 <InputLabel id="dropdown-label">Risk</InputLabel>
                 <Select
                   labelId="dropdown-label"
@@ -201,7 +184,6 @@ const checkoutSchema = yup.object().shape({
     .matches(dateRegExp, 'Date format is not valid')
     .required('required'),
   duration: yup.string().required('required'),
-  currency: yup.string().required('required'),
   risk: yup.string().required('required'),
   liquidity: yup.string().required('required'),
 });

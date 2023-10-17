@@ -21,7 +21,7 @@ const RecurringExpenseForm = () => {
       category: values.category,
       startDate: values.startDate,
       location: values.location,
-      currency: values.currency,
+      currency: localStorage.getItem('currentCurrency'),
       frequency: values.frequency,
       endDate: values.endDate,
       user_id: userId,
@@ -97,23 +97,6 @@ const RecurringExpenseForm = () => {
                     Subscription Services
                   </MenuItem>
                   <MenuItem value="Others">Others</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl
-                fullWidth
-                variant="filled"
-                sx={{ gridColumn: 'span 2' }}
-              >
-                <InputLabel id="dropdown-label">Currency</InputLabel>
-                <Select
-                  labelId="dropdown-label"
-                  value={values.dropdown}
-                  onChange={handleChange}
-                  name="currency"
-                >
-                  <MenuItem value="AUD">AUD</MenuItem>
-                  <MenuItem value="USD">USD</MenuItem>
-                  <MenuItem value="VND">VND</MenuItem>
                 </Select>
               </FormControl>
               <TextField
@@ -197,7 +180,6 @@ const checkoutSchema = yup.object().shape({
   category: yup.string().required('required'),
   frequency: yup.string().required('required'),
   location: yup.string().required('required'),
-  currency: yup.string().required('required'),
   startDate: yup
     .string()
     .matches(dateRegExp, 'Date format is not valid')

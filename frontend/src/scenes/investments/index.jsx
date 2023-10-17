@@ -50,11 +50,6 @@ const Investments = () => {
       flex: 1,
     },
     {
-      field: 'currency',
-      headerName: 'Currency',
-      flex: 1,
-    },
-    {
       field: 'risk',
       headerName: 'Risk',
       flex: 1,

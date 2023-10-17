@@ -5,13 +5,30 @@ import InputBase from '@mui/material/InputBase';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import { cleanToken, getRefreshToken } from '../../utils/token';
 import { toast } from 'react-toastify';
 import apiInstance from '../../apis/Axios';
 import LogoutIcon from '@mui/icons-material/Logout';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import React, { useState } from 'react';
+import Menu from '@mui/material/Menu';
+import { MenuItem } from '@mui/material';
+import { Check } from '@mui/icons-material';
+
+const currencies = [
+  { code: 'AUD', flag: '🇦🇺' },
+  { code: 'USD', flag: '🇺🇸' },
+  { code: 'EUR', flag: '🇪🇺' },
+  { code: 'JPY', flag: '🇯🇵' },
+  { code: 'GBP', flag: '🇬🇧' },
+  { code: 'CAD', flag: '🇨🇦' },
+  { code: 'CHF', flag: '🇨🇭' },
+  { code: 'CNY', flag: '🇨🇳' },
+  { code: 'SEK', flag: '🇸🇪' },
+  { code: 'NZD', flag: '🇳🇿' },
+];
 
 const Topbar = () => {
   const theme = useTheme();
@@ -19,6 +36,60 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
   const refreshToken = getRefreshToken();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    localStorage.getItem('currentCurrency')
+  ); // Set default selected currency to AUD
+
+  const inputCurrency = selectedCurrency;
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = currencyCode => {
+    console.log(inputCurrency);
+    setSelectedCurrency(currencyCode);
+    localStorage.setItem('currentCurrency', currencyCode);
+    console.log(currencyCode);
+    setAnchorEl(null);
+    apiInstance
+      .put(`/incomes/updateCurrencyExchange/${inputCurrency}/${currencyCode}`) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .put(
+        `/investment/updateCurrencyExchange/${inputCurrency}/${currencyCode}`
+      ) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .put(`/expenses/updateCurrencyExchange/${inputCurrency}/${currencyCode}`) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .put(
+        `/recurringExpenses/updateCurrencyExchange/${inputCurrency}/${currencyCode}`
+      ) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+  };
 
   const handleLogout = async () => {
     const response = await apiInstance
@@ -63,9 +134,26 @@ const Topbar = () => {
         <IconButton>
           <NotificationsOutlinedIcon />
         </IconButton>
-        <IconButton>
-          <SettingsOutlinedIcon />
+        <IconButton onClick={handleClick}>
+          <CurrencyExchangeIcon />
         </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)}
+        >
+          {currencies.map(currency => (
+            <MenuItem
+              key={currency.code}
+              onClick={() => handleMenuItemClick(currency.code)}
+            >
+              {currency.flag} {currency.code}
+              {selectedCurrency === currency.code && (
+                <Check style={{ color: 'green', marginLeft: 'auto' }} />
+              )}
+            </MenuItem>
+          ))}
+        </Menu>
         <IconButton onClick={handleLogout}>
           <LogoutIcon />
         </IconButton>

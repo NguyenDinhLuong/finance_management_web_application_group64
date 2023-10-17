@@ -24,6 +24,7 @@ export default function LoginForm() {
         });
         console.log(isSuccess);
         if (isSuccess) {
+          localStorage.setItem('currentCurrency', 'AUD');
           navigate('/');
           setIsLoading(false);
         }
