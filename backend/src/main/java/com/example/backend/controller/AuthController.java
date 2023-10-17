@@ -6,7 +6,6 @@ import com.example.backend.model.*;
 import com.example.backend.payload.request.*;
 import com.example.backend.payload.response.TokenRefreshResponse;
 import com.example.backend.repository.RefreshTokenRepository;
-import com.example.backend.security.services.IncomeService;
 import com.example.backend.security.services.RefreshTokenService;
 import com.example.backend.security.services.UserService;
 import jakarta.validation.Valid;
@@ -26,6 +25,7 @@ import com.example.backend.repository.UserRepository;
 import com.example.backend.security.jwt.JwtUtils;
 import com.example.backend.security.services.UserDetailsImpl;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -55,6 +55,28 @@ public class AuthController {
 
     @Autowired
     UserService userService;
+
+    @GetMapping("/listOfUsers")
+    public ResponseEntity<?> getUsersByRoleId() {
+        List<User> users = userRepository.findByRoleId(1);
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("No users found with the given role ID."));
+        }
+        return ResponseEntity.ok(users);
+    }
+
+    @DeleteMapping("/deleteUser/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        // Check if the user with the given id exists
+        Optional<User> userData = userRepository.findById(id);
+
+        if (userData.isPresent()) {
+            userRepository.deleteById(id);
+            return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User not found with the provided ID."));
+        }
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

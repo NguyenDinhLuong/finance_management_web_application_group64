@@ -25,7 +25,7 @@ public class Investment {
     private String risk;
     private String liquidity;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;

@@ -26,7 +26,7 @@ public class NormalExpense {
     private String status;
     private String paymentMethod;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;

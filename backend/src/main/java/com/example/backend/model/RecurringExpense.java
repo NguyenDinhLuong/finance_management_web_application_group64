@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.util.Date;
 
 @Entity
@@ -27,7 +26,7 @@ public class RecurringExpense {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
