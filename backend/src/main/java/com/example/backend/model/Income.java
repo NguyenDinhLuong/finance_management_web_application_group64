@@ -1,76 +1,43 @@
 package com.example.backend.model;
 
-import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "incomes")
 public class Income {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long incomeId;
-
-    @NotBlank
-    private double amount;
-
-    @Size(max = 100)
+    private Long id;
+    private float amount;
     private String source;
+    private String category;
 
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
+    private String status;
+    private String location;
 
-    @NotBlank
-    @ManyToOne
-    @JoinColumn(name = "userId")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
-    public Income(){
-
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setAmount(double amount) {
+    public Income(float amount, String source, String category, Date date, String status, String location) {
         this.amount = amount;
-    }
-
-    public void setSource(String source) {
         this.source = source;
-    }
-
-    public void setDate(Date date) {
+        this.category = category;
         this.date = date;
-    }
-
-    public void setIncomeId(Long incomeId) {
-        this.incomeId = incomeId;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public Long getIncomeId() {
-        return incomeId;
+        this.status = status;
+        this.location = location;
     }
 }

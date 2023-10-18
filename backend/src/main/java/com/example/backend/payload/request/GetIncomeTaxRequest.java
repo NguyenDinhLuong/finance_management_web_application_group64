@@ -1,25 +1,24 @@
 package com.example.backend.payload.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
-import java.util.Date;
+
 
 @Data
-public class AddIncomeRequest {
+public class GetIncomeTaxRequest {
     @NotBlank
-    private float amount;
+    private double amount;
+
     @NotBlank
+    @Size(max = 140)
     private String source;
-    @NotBlank
-    private String category;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+    private String date;
+
     @NotBlank
-    private String status;
-    @NotBlank
-    private String location;
-    private Long user_id;
-}
+    private Long userId;
+
+    }

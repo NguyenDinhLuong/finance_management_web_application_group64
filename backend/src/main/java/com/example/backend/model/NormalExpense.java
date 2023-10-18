@@ -6,14 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "investment")
-public class Investment {
+@Table(name = "expenses")
+public class NormalExpense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,21 +22,21 @@ public class Investment {
     private String category;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
-    private String duration;
-    private String risk;
-    private String liquidity;
+    private String location;
+    private String status;
+    private String paymentMethod;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
 
-    public Investment(float amount, String category, Date date, String duration, String risk, String liquidity) {
+    public NormalExpense(float amount, String category, Date date, String location, String status, String paymentMethod) {
         this.amount = amount;
         this.category = category;
         this.date = date;
-        this.duration = duration;
-        this.risk = risk;
-        this.liquidity = liquidity;
+        this.location = location;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
     }
 }

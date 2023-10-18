@@ -1,17 +1,10 @@
 package com.example.backend.controller;
 
+import com.example.backend.model.Income;
 import com.example.backend.model.Investment;
-import com.example.backend.model.User;
-import com.example.backend.payload.request.InvestmentRequest;
-import com.example.backend.payload.request.UpdateInvestmentRequest;
-import com.example.backend.payload.response.AllInvestmentResponse;
-import com.example.backend.payload.response.InvestmentInfoResponse;
+import com.example.backend.payload.request.AddInvestmentRequest;
 import com.example.backend.payload.response.MessageResponse;
-import com.example.backend.repository.InvestmentRepository;
 import com.example.backend.security.services.InvestmentService;
-import com.example.backend.security.services.UserService;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,76 +18,35 @@ import java.util.List;
 public class InvestmentController {
 
     @Autowired
-    UserService userService;
+    private InvestmentService investmentService;
 
-    @Autowired
-    InvestmentService investmentService;
-
-    @Autowired
-    InvestmentRepository investmentRepository;
-
-    @PostMapping("/add")
-    public ResponseEntity<?> AddInvestment(@Valid @RequestBody InvestmentRequest investmentRequest){
-
-        User user = userService.findUserById(investmentRequest.getUserID());
-
-        Investment investment = new Investment(user,
-                investmentRequest.getInvestmentType(),
-                investmentRequest.getAmount(),
-                investmentRequest.getDate(),
-                investmentRequest.getDescription());
-
-        investmentRepository.save(investment);
-
-        return ResponseEntity.ok(new InvestmentInfoResponse(investment));
-    }
-
-    @PostMapping("/update")
-    public ResponseEntity<?> UpdateInvestment(@Valid @RequestBody UpdateInvestmentRequest updateInvestmentRequest){
-
-        try{
-            Investment investment = investmentService.updateInvestment(updateInvestmentRequest);
-            investmentRepository.save(investment);
-
-            return ResponseEntity.ok(new InvestmentInfoResponse(investment));
-
-        }catch (EntityNotFoundException e){
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Investment not exist."));
+    // Create a new investment
+    @PostMapping("/addInvestment")
+    public ResponseEntity<?>  createInvestment(@RequestBody AddInvestmentRequest addInvestmentRequest) {
+        Investment createInvestment = investmentService.saveInvestment(addInvestmentRequest);
+        if(createInvestment == null) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Investment created unsuccessfully. Please check again!"));
         }
+        return ResponseEntity.ok(new MessageResponse("Investment created successfully!"));
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<?> deleteInvestment(@Valid @RequestParam Long id){
-        try{
-            Investment investment = investmentService.findInvestmentById(id);
-            investmentRepository.delete(investment);
+    // Get all investments
+    @GetMapping
+    public ResponseEntity<List<Investment>> getAllInvestments() {
+        List<Investment> investments = investmentService.getAllInvestments();
+        return ResponseEntity.ok(investments);
+    }
 
-            return ResponseEntity.ok(new MessageResponse("Investment successfully deleted" + id));
+    @PutMapping("/updateCurrencyExchange/{inputCurrency}/{outputCurrency}")
+    public ResponseEntity<List<Investment>> updateAllInvestmentsAfterCurrencyExchange(@PathVariable String inputCurrency, @PathVariable String outputCurrency) {
 
-        }catch (EntityNotFoundException e){
+        List<Investment> updatedInvestments = investmentService.updateAllInvestmentsAfterCurrencyExchange(inputCurrency, outputCurrency);
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Investment not found" + id));
+        if(updatedInvestments.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content if no incomes are found/updated
         }
+
+        return ResponseEntity.ok(updatedInvestments); // Return 200 OK with the list of updated incomes
     }
-
-    @GetMapping("/getAll")
-    public ResponseEntity<?> getAllInvestment(){
-        List<Investment> investmentList = investmentRepository.findAll();
-        return ResponseEntity.ok(new AllInvestmentResponse(investmentList));
-    }
-
-    @GetMapping("/getById")
-    public ResponseEntity<?> getInvestmentById(@Valid @RequestParam Long id){
-        try{
-            Investment investment = investmentService.findInvestmentById(id);
-
-            return ResponseEntity.ok(new InvestmentInfoResponse(investment));
-
-        }catch (EntityNotFoundException e){
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Investment not found" + id));
-        }
-    }
-
 }
+
