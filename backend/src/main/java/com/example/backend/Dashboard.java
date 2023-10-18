@@ -55,7 +55,7 @@ public class Dashboard {
      * @param targetMonth month to get expenses. In numerical form e.g. Jan = 1
      * @return ArrayList of expenses in that target month
      */
-    public ArrayList<Expenses> getExpensesByMonth(ArrayList<Expenses> expenses, int targetMonth) {
+    public ArrayList<Expenses> getExpensesByMonth(ArrayList<Expenses> expenses, ArrayList<RecurringExpenses> recurringExpenses, int targetMonth) { // needs to be updated to handle recurring expenses
 
         if(expenses.isEmpty()) {
             System.out.println("No expenses");
@@ -86,7 +86,7 @@ public class Dashboard {
      * @param expenses ArrayList of expenses
      * @return sorted ArrayList. Each key in the hashmap is a category
      */
-    public HashMap<String, Double> getExpensesInCategories(ArrayList<Expenses> expenses) {
+    public HashMap<String, Double> getExpensesInCategories(ArrayList<Expenses> expenses, ArrayList<RecurringExpenses> recurringExpenses) { // needs to be updated to handle recurring expenses
         if(expenses.isEmpty()) {
             return new HashMap<>();
         }
@@ -120,7 +120,7 @@ public class Dashboard {
      * @param expenses list of expenses
      * @return total amount spent
      */
-    public Double sumOfExpenses(ArrayList<Expenses> expenses) {
+    public Double sumOfExpenses(ArrayList<Expenses> expenses, ArrayList<RecurringExpenses> recurringExpenses) { // needs to be updated to handle recuring expenses
         Double totalExpenses = 0.0;
 
         for(Expenses expense : expenses) {
@@ -133,7 +133,7 @@ public class Dashboard {
         return totalExpenses;
     }
 
-    public HashMap<String, Double> generateBarChart(ArrayList<Expenses> expenses) {
+    public HashMap<String, Double> generateBarChart(ArrayList<Expenses> expenses, ArrayList<RecurringExpenses> recurringExpenses) { // needs to be updated to handle recuring expenses
 
         // this list will store the month values of the past three months
         ArrayList<Integer> pastThreeMonthsValue = new ArrayList<Integer>();

@@ -3,6 +3,8 @@ package com.example.backend.controllers;
 import com.example.backend.Currency;
 import com.example.backend.Dashboard;
 import com.example.backend.Expenses;
+import com.example.backend.controller.ExpenseController;
+import com.example.backend.security.services.ExpenseService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
