@@ -13,7 +13,7 @@ const Expenses = () => {
 
   useEffect(() => {
     apiInstance
-      .get('/expenses') // this assumes the endpoint for fetching incomes is `/incomes`
+      .get(`/expenses/${localStorage.getItem('id')}`) // this assumes the endpoint for fetching incomes is `/incomes`
       .then(response => {
         console.log(response.data);
         setExpensesData(response.data);

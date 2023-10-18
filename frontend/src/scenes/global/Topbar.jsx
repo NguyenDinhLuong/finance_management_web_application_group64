@@ -52,7 +52,6 @@ const Topbar = () => {
     console.log(inputCurrency);
     setSelectedCurrency(currencyCode);
     localStorage.setItem('currentCurrency', currencyCode);
-    console.log(currencyCode);
     setAnchorEl(null);
     apiInstance
       .put(`/incomes/updateCurrencyExchange/${inputCurrency}/${currencyCode}`) // this assumes the endpoint for fetching incomes is `/incomes`

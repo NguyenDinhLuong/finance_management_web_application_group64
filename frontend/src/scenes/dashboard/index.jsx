@@ -2,19 +2,84 @@ import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import { tokens } from '../../theme';
 import { mockTransactions } from '../../data/mockData';
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
-import EmailIcon from '@mui/icons-material/Email';
-import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import TrafficIcon from '@mui/icons-material/Traffic';
 import Header from '../../components/Header';
 import LineChart from '../../components/LineChart';
 import BarChart from '../../components/BarChart';
 import StatBox from '../../components/StatBox';
 import ProgressCircle from '../../components/ProgressCircle';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import apiInstance from '../../apis/Axios';
+import React, { useState, useEffect } from 'react';
+
+const calculateTax = income => {
+  if (income <= 18200) {
+    return 0;
+  } else if (income > 18200 && income <= 45000) {
+    return 0.19 * (income - 18200);
+  } else if (income > 45000 && income <= 120000) {
+    return 5092 + 0.325 * (income - 45000);
+  } else if (income > 120000 && income <= 180000) {
+    return 29467 + 0.37 * (income - 120000);
+  } else {
+    // Assuming there's an upper limit, you can adjust this as per your needs.
+    // Handle tax calculation for incomes over $180,000
+    // For simplicity, let's assume a flat rate above this. Adjust as needed.
+    return 29467 + 0.37 * 80000 + 0.45 * (income - 180000);
+  }
+};
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [totalIncomeAmount, setTotalIncomeAmount] = useState(0);
+  const [totalExpenseAmount, setTotalExpenseAmount] = useState(0);
+  const [totalRecurringExpenseAmount, setTotalRecurringExpenseAmount] =
+    useState(0);
+  const [totalInvestmentAmount, setTotalInvestmentAmount] = useState(0);
+  const [totalTaxAmount, setTotalTaxAmount] = useState(0);
+
+  useEffect(() => {
+    apiInstance
+      .get(`/incomes/totalAmount/${localStorage.getItem('id')}`)
+      .then(response => {
+        //console.log(response.data);
+        setTotalIncomeAmount(response.data);
+        setTotalTaxAmount(calculateTax(response.data));
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .get(`/expenses/totalAmount/${localStorage.getItem('id')}`)
+      .then(response => {
+        //console.log(response.data);
+        setTotalExpenseAmount(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .get(`/investment/totalAmount/${localStorage.getItem('id')}`)
+      .then(response => {
+        //console.log(response.data);
+        setTotalInvestmentAmount(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .get(`/recurringExpenses/totalAmount/${localStorage.getItem('id')}`)
+      .then(response => {
+        //console.log(response.data);
+        setTotalRecurringExpenseAmount(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+  }, []);
 
   return (
     <Box m="20px">
@@ -39,12 +104,14 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
+            title={
+              totalIncomeAmount + ' ' + localStorage.getItem('currentCurrency')
+            }
+            subtitle="Total Income"
             progress="0.75"
             increase="+14%"
             icon={
-              <EmailIcon
+              <AttachMoneyIcon
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
               />
             }
@@ -58,12 +125,17 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="431,225"
-            subtitle="Sales Obtained"
+            title={
+              totalExpenseAmount +
+              totalRecurringExpenseAmount +
+              ' ' +
+              localStorage.getItem('currentCurrency')
+            }
+            subtitle="Total Expense"
             progress="0.50"
             increase="+21%"
             icon={
-              <PointOfSaleIcon
+              <ShoppingCartCheckoutIcon
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
               />
             }
@@ -77,12 +149,16 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="32,441"
-            subtitle="New Clients"
+            title={
+              totalInvestmentAmount +
+              ' ' +
+              localStorage.getItem('currentCurrency')
+            }
+            subtitle="Total Investment"
             progress="0.30"
             increase="+5%"
             icon={
-              <PersonAddIcon
+              <CurrencyBitcoinIcon
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
               />
             }
@@ -96,12 +172,12 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="1,325,134"
-            subtitle="Traffic Received"
+            title={totalTaxAmount}
+            subtitle="Total Taxes"
             progress="0.80"
             increase="+43%"
             icon={
-              <TrafficIcon
+              <CalculateIcon
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
               />
             }

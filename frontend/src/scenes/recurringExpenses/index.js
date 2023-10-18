@@ -13,7 +13,7 @@ const RecurringExpenses = () => {
 
   useEffect(() => {
     apiInstance
-      .get('/recurringExpenses') // this assumes the endpoint for fetching incomes is `/incomes`
+      .get(`/recurringExpenses/${localStorage.getItem('id')}`) // this assumes the endpoint for fetching incomes is `/incomes`
       .then(response => {
         console.log(response.data);
         setRecurringExpensesData(response.data);
