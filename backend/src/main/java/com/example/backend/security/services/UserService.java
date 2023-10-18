@@ -28,11 +28,5 @@ public class UserService {
         user.setLastName(userUpdates.getLastName());
         return user;
     }
-
-    @Transactional
-    public User findUserById(Long id){
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id " + id));
-    }
 }
 

@@ -65,8 +65,4 @@ public class ExpenseService {
 
         return expenses;
     }
-
-    public void uploadExpenseFromReceipt(NormalExpense expense){
-        expenseRepository.save(expense);
-    }
 }
