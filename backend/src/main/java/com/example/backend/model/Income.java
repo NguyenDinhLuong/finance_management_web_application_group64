@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "income")
+@Table(name = "incomes")
 public class Income {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Income {
     @Size(max = 100)
     private String source;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat
     private Date date;
 
     @NotBlank
