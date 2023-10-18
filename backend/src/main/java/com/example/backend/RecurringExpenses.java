@@ -17,4 +17,8 @@ public class RecurringExpenses extends Expenses {
 
     public Integer getFrequency() { return this.frequency; }
 
+    public Expenses convertToStaticExpense() { return new Expenses(this.getId(), this.getCategory(), this.getAmount(), this.getCurrency(), this.getDescription(), this.getDate()); }
+
+    public Expenses convertToStaticExpense(LocalDate date) { return new Expenses(this.getId(), this.getCategory(), this.getAmount(), this.getCurrency(), this.getDescription(), date); }
+
 }

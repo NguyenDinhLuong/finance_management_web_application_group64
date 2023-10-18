@@ -76,6 +76,28 @@ public class Dashboard {
             }
         }
 
+
+
+        for (RecurringExpenses reccuringExpense : recurringExpenses) {
+            LocalDate start = reccuringExpense.getDate();
+            LocalDate end = reccuringExpense.getEndDate();
+
+            if(end.isAfter(LocalDate.now())) { end = LocalDate.now(); }
+
+            int interval = reccuringExpense.getFrequency();
+
+            while(end.isAfter(start)) {
+                if(start.getMonthValue() == targetMonth) {
+                    expensesInMonth.add(reccuringExpense.convertToStaticExpense(start));
+                }
+                start = start.plusDays(interval);
+            }
+
+
+        }
+
+
+
         return  expensesInMonth;
 
     }
@@ -129,6 +151,17 @@ public class Dashboard {
 
         DecimalFormat format = new DecimalFormat("0.00");
         totalExpenses = Double.parseDouble(format.format(totalExpenses));
+
+        for(RecurringExpenses recurringExpense : recurringExpenses) {
+            LocalDate start = recurringExpense.getDate();
+            LocalDate end = recurringExpense.getEndDate();
+            int interval = recurringExpense.getFrequency();
+
+            while(end.isAfter(start)) {
+
+            }
+
+        }
 
         return totalExpenses;
     }
