@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/investment")
 public class InvestmentController {
+
     @Autowired
     private InvestmentService investmentService;
 

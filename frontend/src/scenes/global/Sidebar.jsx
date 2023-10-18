@@ -22,7 +22,6 @@ import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   return (
     <MenuItem
       active={selected === title}
@@ -113,6 +112,7 @@ const Sidebar = () => {
               </Box>
             </Box>
           )}
+
           <Box paddingLeft={isCollapsed ? undefined : '10%'}>
             {role === 'ROLE_USER' && (
               <Item
@@ -182,7 +182,7 @@ const Sidebar = () => {
                 />
                 <Item
                   title="Tax Calculation"
-                  to="/"
+                  to="/taxCalForm"
                   icon={<CalculateIcon />}
                   selected={selected}
                   setSelected={setSelected}
