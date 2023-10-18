@@ -1,6 +1,5 @@
 package com.example.backend.controller;
 
-import com.example.backend.model.NormalExpense;
 import com.example.backend.model.RecurringExpense;
 import com.example.backend.payload.request.AddRecurringExpenseRequest;
 import com.example.backend.payload.response.MessageResponse;
@@ -29,10 +28,19 @@ public class RecurringExpenseController {
     }
 
     // Get all recurring expenses
-    @GetMapping
-    public ResponseEntity<List<RecurringExpense>> getAllExpenses() {
-        List<RecurringExpense> recurringExpenses = recurringExpenseService.getAllRecurringExpenses();
-        return ResponseEntity.ok(recurringExpenses);
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<RecurringExpense>> getRecurringExpensesByUserId(@PathVariable Long userId) {
+        List<RecurringExpense> recurringExpenses = recurringExpenseService.getAllRecurringExpensesByUserId(userId);
+        if(recurringExpenses.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content if no incomes are found for the user
+        }
+        return ResponseEntity.ok(recurringExpenses); // Return 200 OK with the list of incomes for the user
+    }
+
+    @GetMapping("/totalAmount/{userId}")
+    public ResponseEntity<Float> getTotalRecurringExpenseAmountByUserId(@PathVariable Long userId) {
+        float totalAmount = recurringExpenseService.getTotalRecurringExpenseAmountByUserId(userId);
+        return ResponseEntity.ok(totalAmount);
     }
 
     @PutMapping("/updateCurrencyExchange/{inputCurrency}/{outputCurrency}")

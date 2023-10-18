@@ -1,5 +1,6 @@
 package com.example.backend.security.services;
 
+import com.example.backend.model.Income;
 import com.example.backend.model.Investment;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddInvestmentRequest;
@@ -43,8 +44,8 @@ public class InvestmentService {
         return investment;
     }
 
-    public List<Investment> getAllInvestments() {
-        return investmentRepository.findAll();
+    public List<Investment> getAllInvestmentsByUserId(Long userId) {
+        return investmentRepository.findByUserId(userId);
     }
 
     public List<Investment> updateAllInvestmentsAfterCurrencyExchange(String inputCurrency,String outputCurrency) {
@@ -62,5 +63,15 @@ public class InvestmentService {
         }
 
         return investments;
+    }
+
+    public float getTotalInvestmentAmountByUserId(Long userId) {
+        List<Investment> investments = investmentRepository.findByUserId(userId);
+        float totalAmount = 0;
+
+        for (Investment investment : investments) {
+            totalAmount += investment.getAmount();
+        }
+        return totalAmount;
     }
 }

@@ -44,8 +44,8 @@ public class RecurringExpenseService {
         return recurringExpense;
     }
 
-    public List<RecurringExpense> getAllRecurringExpenses() {
-        return recurringExpenseRepository.findAll();
+    public List<RecurringExpense> getAllRecurringExpensesByUserId(Long userId) {
+        return recurringExpenseRepository.findByUserId(userId);
     }
 
     public List<RecurringExpense> updateAllRecurringExpensesAfterCurrencyExchange(String inputCurrency, String outputCurrency) {
@@ -63,5 +63,16 @@ public class RecurringExpenseService {
         }
 
         return recurringExpenses;
+    }
+
+    public float getTotalRecurringExpenseAmountByUserId(Long userId) {
+        List<RecurringExpense> recurringExpenses = recurringExpenseRepository.findByUserId(userId);
+        float totalAmount = 0;
+
+        for (RecurringExpense recurringExpense : recurringExpenses) {
+            totalAmount += recurringExpense.getAmount();
+        }
+
+        return totalAmount;
     }
 }

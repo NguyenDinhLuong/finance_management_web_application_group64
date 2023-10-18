@@ -42,8 +42,8 @@ public class IncomeService  {
         return income;
     }
 
-    public List<Income> getAllIncomes() {
-        return incomeRepository.findAll();
+    public List<Income> getAllIncomesByUserId(Long userId) {
+        return incomeRepository.findByUserId(userId);
     }
 
     public List<Income> updateAllIncomesAfterCurrencyExchange(String inputCurrency,String outputCurrency) {
@@ -61,6 +61,16 @@ public class IncomeService  {
         }
 
         return incomes;
+    }
+
+    public float getTotalIncomeAmountByUserId(Long userId) {
+        List<Income> incomes = incomeRepository.findByUserId(userId);
+        float totalAmount = 0;
+
+        for (Income income : incomes) {
+            totalAmount += income.getAmount();
+        }
+        return totalAmount;
     }
 }
 

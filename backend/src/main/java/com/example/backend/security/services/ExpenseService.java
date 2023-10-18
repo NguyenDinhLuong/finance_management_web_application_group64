@@ -45,8 +45,8 @@ public class ExpenseService {
         return expense;
     }
 
-    public List<NormalExpense> getAllExpenses() {
-        return expenseRepository.findAll();
+    public List<NormalExpense> getAllExpensesByUserId(Long userId) {
+        return expenseRepository.findByUserId(userId);
     }
 
     public List<NormalExpense> updateAllExpensesAfterCurrencyExchange(String inputCurrency,String outputCurrency) {
@@ -64,5 +64,16 @@ public class ExpenseService {
         }
 
         return expenses;
+    }
+
+    public float getTotalExpenseAmountByUserId(Long userId) {
+        List<NormalExpense> expenses = expenseRepository.findByUserId(userId);
+        float totalAmount = 0;
+
+        for (NormalExpense normalExpense : expenses) {
+            totalAmount += normalExpense.getAmount();
+        }
+
+        return totalAmount;
     }
 }

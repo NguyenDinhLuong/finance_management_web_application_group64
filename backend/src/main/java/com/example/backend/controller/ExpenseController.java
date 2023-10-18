@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -29,10 +28,19 @@ public class ExpenseController {
     }
 
     // Get all expenses
-    @GetMapping
-    public ResponseEntity<List<NormalExpense>> getAllExpenses() {
-        List<NormalExpense> expenses = expenseService.getAllExpenses();
-        return ResponseEntity.ok(expenses);
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<NormalExpense>> getExpensesByUserId(@PathVariable Long userId) {
+        List<NormalExpense> expenses = expenseService.getAllExpensesByUserId(userId);
+        if(expenses.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content if no incomes are found for the user
+        }
+        return ResponseEntity.ok(expenses); // Return 200 OK with the list of incomes for the user
+    }
+
+    @GetMapping("/totalAmount/{userId}")
+    public ResponseEntity<Float> getTotalExpenseAmountByUserId(@PathVariable Long userId) {
+        float totalAmount = expenseService.getTotalExpenseAmountByUserId(userId);
+        return ResponseEntity.ok(totalAmount);
     }
 
     @PutMapping("/updateCurrencyExchange/{inputCurrency}/{outputCurrency}")
