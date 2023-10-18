@@ -28,7 +28,7 @@ public class Expense {
 
     @NotBlank
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Size(max = 150)

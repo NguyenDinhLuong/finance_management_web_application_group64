@@ -182,7 +182,7 @@ const Sidebar = () => {
                 />
                 <Item
                   title="Tax Calculation"
-                  to="/"
+                  to="/taxCalForm"
                   icon={<CalculateIcon />}
                   selected={selected}
                   setSelected={setSelected}

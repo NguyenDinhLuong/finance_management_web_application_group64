@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.model.Investment;
 import com.example.backend.model.InvestmentType;
 import com.example.backend.payload.request.EnterIncomeRequest;
+import com.example.backend.payload.request.GetIncomeTaxRequest;
 import com.example.backend.payload.response.AllInvestmentResponse;
 import com.example.backend.payload.response.MessageResponse;
 import com.example.backend.payload.response.TaxCalculationResponse;
@@ -80,7 +81,7 @@ public class RestTaxController {
 
         double tax;
 
-        if(investment.getType().equals(InvestmentType.RealEstate)){
+        if(investment.getCategory().equals("RealEstate")){
 
             tax = investment.getAmount()*0.003;
 
