@@ -22,23 +22,22 @@ public class DashboardController {
     @Autowired
     private ExpenseService expenseService;
 
+
     @GetMapping("/barchart")
-    public HashMap<String, Double> getBarChart(@RequestParam ArrayList<Expenses> expenses) {
+    public HashMap<String, Double> getBarChart() {
 
         Dashboard dashboard = new Dashboard();
 
-        return dashboard.generateBarChart(expenses);
+        return dashboard.generateBarChart(expenseService.retrieveExpenses(), expenseService.retrieveRecurringExpenses());
 
     }
 
     @GetMapping("/piechart")
-    public HashMap<String, Double> getPieChart(@RequestParam ArrayList<Expenses> expenses) {
-
-        expenseService.retrieveExpenses()
+    public HashMap<String, Double> getPieChart() {
 
         Dashboard dashboard = new Dashboard();
 
-        return dashboard.getExpensesInCategories(expenses);
+        return dashboard.getExpensesInCategories(expenseService.retrieveExpenses(), expenseService.retrieveRecurringExpenses());
     }
 
 
