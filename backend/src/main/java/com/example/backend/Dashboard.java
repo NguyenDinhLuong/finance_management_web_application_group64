@@ -19,11 +19,12 @@ public class Dashboard {
 
         Dashboard d = new Dashboard();
         ArrayList<Expenses> e = d.generateTestData();
+        ArrayList<RecurringExpenses> r = d.generateTestRecurring();
 
 //        ArrayList<Expenses> expensesByMonth = d.getExpensesByMonth(e, 1);
 //        HashMap<String, ArrayList<Expenses>> sortedCategories = d.getExpensesInCategories(e);
 //
-        d.generateBarChart(e);
+        d.generateBarChart(e, r);
 
 //        d.generatePieChart(e);
 
@@ -46,6 +47,15 @@ public class Dashboard {
         testExpenses.add(new Expenses(9L, "groceries", 5.5, "AUD", "sample desc9", LocalDate.of(2023, 8, 12)));
 
         return testExpenses;
+    }
+
+    public ArrayList<RecurringExpenses> generateTestRecurring() {
+        ArrayList<RecurringExpenses> recurringExpensesTest = new ArrayList<>();
+        recurringExpensesTest.add(new RecurringExpenses(1L, "fuel", 20.0, "AUD", "sample desc1", LocalDate.of(2023, 10, 12), LocalDate.of(2024, 10, 12), 7));
+        recurringExpensesTest.add(new RecurringExpenses(2L, "fuel", 65.6, "AUD", "sample desc2", LocalDate.of(2023, 10, 13), LocalDate.of(2023, 11, 13), 14));
+        recurringExpensesTest.add(new RecurringExpenses(3L, "fuel", 40.5, "AUD", "sample desc3", LocalDate.of(2023, 10, 12), LocalDate.of(2023, 12, 19), 3));
+
+        return recurringExpensesTest;
     }
 
 
@@ -113,6 +123,19 @@ public class Dashboard {
             return new HashMap<>();
         }
 
+        for(RecurringExpenses recurringExpense : recurringExpenses) {
+            LocalDate start = recurringExpense.getDate();
+            LocalDate end = recurringExpense.getEndDate();
+            int interval = recurringExpense.getFrequency();
+
+            if(end.isAfter(LocalDate.now())) { end = LocalDate.now(); }
+
+            while(end.isAfter(start)) {
+                expenses.add(recurringExpense.convertToStaticExpense(start));
+                start = start.plusDays(interval);
+            }
+        }
+
         HashMap<String, ArrayList<Expenses>> expensesByCategory;
         expensesByCategory = new HashMap<String, ArrayList<Expenses>>();
 
@@ -157,11 +180,27 @@ public class Dashboard {
             LocalDate end = recurringExpense.getEndDate();
             int interval = recurringExpense.getFrequency();
 
-            while(end.isAfter(start)) {
+            if(end.isAfter(LocalDate.now())) { end = LocalDate.now(); }
 
+            while(end.isAfter(start)) {
+                totalExpenses += recurringExpense.getAmount();
+                start = start.plusDays(interval);
             }
 
         }
+
+        return totalExpenses;
+    }
+
+    public Double sumOfExpenses(ArrayList<Expenses> expenses) { // needs to be updated to handle recuring expenses
+        Double totalExpenses = 0.0;
+
+        for(Expenses expense : expenses) {
+            totalExpenses += expense.getAmount();
+        }
+
+        DecimalFormat format = new DecimalFormat("0.00");
+        totalExpenses = Double.parseDouble(format.format(totalExpenses));
 
         return totalExpenses;
     }
@@ -191,7 +230,7 @@ public class Dashboard {
 
         ArrayList<ArrayList<Expenses>> expensesPastThreeMonths = new ArrayList<>();
         for (Integer month : pastThreeMonthsValue) {
-            expensesPastThreeMonths.add(getExpensesByMonth(expenses, month));
+            expensesPastThreeMonths.add(getExpensesByMonth(expenses, recurringExpenses, month));
         }
 
         HashMap<String, Double> expensesByMonth = new HashMap<String, Double>();
