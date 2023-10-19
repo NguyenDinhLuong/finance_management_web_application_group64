@@ -1,11 +1,9 @@
 package com.example.backend.controller;
 
-import com.example.backend.model.Income;
 import com.example.backend.model.Investment;
 import com.example.backend.payload.request.AddInvestmentRequest;
 import com.example.backend.payload.response.MessageResponse;
 import com.example.backend.security.services.InvestmentService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

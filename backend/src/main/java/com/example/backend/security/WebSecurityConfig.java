@@ -82,6 +82,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/investment/**").permitAll()
                                 .requestMatchers("/api/recurringExpenses/**").permitAll()
                                 .requestMatchers("/api/currency/**").permitAll()
+                                .requestMatchers("/api/goals/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 
