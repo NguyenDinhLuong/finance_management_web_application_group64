@@ -1,7 +1,6 @@
-import { Box, IconButton, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { tokens } from '../../theme';
 import { mockTransactions } from '../../data/mockData';
-import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import Header from '../../components/Header';
 import LineChart from '../../components/LineChart';
 import BarChart from '../../components/BarChart';
@@ -41,6 +40,9 @@ const Dashboard = () => {
     useState(0);
   const [totalInvestmentAmount, setTotalInvestmentAmount] = useState(0);
   const [totalTaxAmount, setTotalTaxAmount] = useState(0);
+  const [targetIncome, setTargetIncome] = useState(0);
+  const [maximumExpense, setMaximumExpense] = useState(0);
+  const [maximumInvestment, setMaximumInvestment] = useState(0);
   const { currency, rate } = useCurrency();
   const prevRateRef = useRef();
   const prevCurrencyRef = useRef();
@@ -68,6 +70,13 @@ const Dashboard = () => {
           `/recurringExpenses/totalAmount/${localStorage.getItem('id')}`
         );
         setTotalRecurringExpenseAmount(recurringExpenseResponse.data);
+
+        const goalResponse = await apiInstance.get(
+          `/goals/${localStorage.getItem('id')}`
+        );
+        setTargetIncome(goalResponse.data.targetIncome);
+        setMaximumExpense(goalResponse.data.maximumExpense);
+        setMaximumInvestment(goalResponse.data.maximumInvestment);
       } catch (error) {
         console.error('There was an error fetching the data', error);
       }
@@ -82,6 +91,9 @@ const Dashboard = () => {
     const updatedTotalRecurringExpenseAmount =
       totalRecurringExpenseAmount * rate;
     const updatedTotalTaxAmount = totalTaxAmount * rate;
+    const updatedTargetIncome = targetIncome * rate;
+    const updatedMaximumExpense = maximumExpense * rate;
+    const updatedMaximumInvestment = maximumInvestment * rate;
     // Check if rate or currency has changed from their previous values
     if (rate !== prevRateRef.current || currency !== prevCurrencyRef.current) {
       setTotalIncomeAmount(updatedTotalIncomeAmount);
@@ -89,6 +101,9 @@ const Dashboard = () => {
       setTotalNormalExpenseAmount(updatedTotalNormalExpenseAmount);
       setTotalRecurringExpenseAmount(updatedTotalRecurringExpenseAmount);
       setTotalTaxAmount(updatedTotalTaxAmount);
+      setTargetIncome(updatedTargetIncome);
+      setMaximumExpense(updatedMaximumExpense);
+      setMaximumInvestment(updatedMaximumInvestment);
     }
     // Update the refs with the current values
     prevRateRef.current = rate;
@@ -101,6 +116,9 @@ const Dashboard = () => {
     totalNormalExpenseAmount,
     totalRecurringExpenseAmount,
     totalTaxAmount,
+    targetIncome,
+    maximumExpense,
+    maximumInvestment,
   ]);
 
   return (
@@ -115,7 +133,7 @@ const Dashboard = () => {
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
         gridAutoRows="140px"
-        gap="20px"
+        gap="10px"
       >
         {/* ROW 1 */}
         <Box
@@ -128,8 +146,10 @@ const Dashboard = () => {
           <StatBox
             title={totalIncomeAmount + ' ' + currency}
             subtitle="Total Income"
-            progress="0.75"
-            increase="+14%"
+            progress={totalIncomeAmount / targetIncome}
+            increase={
+              Math.round((totalIncomeAmount / targetIncome) * 100) + '%'
+            }
             icon={
               <AttachMoneyIcon
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
@@ -152,8 +172,17 @@ const Dashboard = () => {
               currency
             }
             subtitle="Total Expense"
-            progress="0.50"
-            increase="+21%"
+            progress={
+              (totalNormalExpenseAmount + totalRecurringExpenseAmount) /
+              maximumExpense
+            }
+            increase={
+              Math.round(
+                ((totalNormalExpenseAmount + totalRecurringExpenseAmount) /
+                  maximumExpense) *
+                  100
+              ) + '%'
+            }
             icon={
               <ShoppingCartCheckoutIcon
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
@@ -171,8 +200,11 @@ const Dashboard = () => {
           <StatBox
             title={totalInvestmentAmount + ' ' + currency}
             subtitle="Total Investment"
-            progress="0.30"
-            increase="+5%"
+            progress={totalInvestmentAmount / maximumInvestment}
+            increase={
+              Math.round((totalInvestmentAmount / maximumInvestment) * 100) +
+              '%'
+            }
             icon={
               <CurrencyBitcoinIcon
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
@@ -190,8 +222,7 @@ const Dashboard = () => {
           <StatBox
             title={totalTaxAmount + ' ' + currency}
             subtitle="Total Taxes"
-            progress="0.80"
-            increase="+43%"
+            progress="1"
             icon={
               <CalculateIcon
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
@@ -228,13 +259,6 @@ const Dashboard = () => {
               >
                 $59,342.32
               </Typography>
-            </Box>
-            <Box>
-              <IconButton>
-                <DownloadOutlinedIcon
-                  sx={{ fontSize: '26px', color: colors.greenAccent[500] }}
-                />
-              </IconButton>
             </Box>
           </Box>
           <Box height="250px" m="-20px 0 0 0">
@@ -329,7 +353,7 @@ const Dashboard = () => {
             fontWeight="600"
             sx={{ padding: '30px 30px 0 30px' }}
           >
-            Sales Quantity
+            Investment
           </Typography>
           <Box height="250px" mt="-20px">
             <BarChart isDashboard={true} />

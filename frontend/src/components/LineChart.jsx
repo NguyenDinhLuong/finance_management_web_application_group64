@@ -1,7 +1,131 @@
-import { ResponsiveLine } from "@nivo/line";
-import { useTheme } from "@mui/material";
-import { tokens } from "../theme";
-import { mockLineData as data } from "../data/mockData";
+import { ResponsiveLine } from '@nivo/line';
+import { useTheme } from '@mui/material';
+import { tokens } from '../theme';
+
+export const mockDataExpenses = [
+  {
+    id: 1,
+    amount: 300,
+    category: 'Utilities',
+    date: '2023-10-15',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+  {
+    id: 2,
+    amount: 400,
+    category: 'Groceries',
+    date: '2023-10-16',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Cash',
+  },
+  {
+    id: 3,
+    amount: 600,
+    category: 'Dining',
+    date: '2023-10-17',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+  {
+    id: 4,
+    amount: 20,
+    category: 'Transportation',
+    date: '2023-10-17',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+  {
+    id: 5,
+    amount: 200,
+    category: 'Entertainment',
+    date: '2023-10-19',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+  {
+    id: 6,
+    amount: 300,
+    category: 'Shopping',
+    date: '2023-10-20',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+  {
+    id: 7,
+    amount: 200,
+    category: 'Shopping',
+    date: '2023-10-21',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+  {
+    id: 8,
+    amount: 300,
+    category: 'Shopping',
+    date: '2023-10-22',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+  {
+    id: 9,
+    amount: 300,
+    category: 'Shopping',
+    date: '2023-10-23',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+  {
+    id: 10,
+    amount: 500,
+    category: 'Shopping',
+    date: '2023-10-24',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+  {
+    id: 11,
+    amount: 250,
+    category: 'Shopping',
+    date: '2023-10-25',
+    location: 'Parramatta',
+    currency: 'AUD',
+    status: 'pending',
+    paymentMethod: 'Card',
+  },
+];
+
+// Convert mockDataExpenses to line chart format
+const expensesData = {
+  id: 'Expenses',
+  data: mockDataExpenses.map(expense => ({
+    x: expense.date,
+    y: expense.amount,
+  })),
+};
+
+// Combined data for the line chart
+export const lineChartData = [expensesData];
 
 const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
   const theme = useTheme();
@@ -9,7 +133,7 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
 
   return (
     <ResponsiveLine
-      data={data}
+      data={lineChartData}
       theme={{
         axis: {
           domain: {
@@ -43,14 +167,18 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
           },
         },
       }}
-      colors={isDashboard ? { datum: "color" } : { scheme: "nivo" }} // added
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-      xScale={{ type: "point" }}
+      colors={{ scheme: 'nivo' }}
+      margin={{ top: 50, right: 170, bottom: 50, left: 60 }}
+      xScale={{
+        type: 'time',
+        format: '%Y-%m-%d',
+        precision: 'day',
+      }}
       yScale={{
-        type: "linear",
-        min: "auto",
-        max: "auto",
-        stacked: true,
+        type: 'linear',
+        min: 0,
+        max: 'auto',
+        stacked: false,
         reverse: false,
       }}
       yFormat=" >-.2f"
@@ -58,52 +186,50 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
       axisTop={null}
       axisRight={null}
       axisBottom={{
-        orient: "bottom",
-        tickSize: 0,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: isDashboard ? undefined : "transportation", // added
-        legendOffset: 36,
-        legendPosition: "middle",
+        format: '%b %d',
+        tickValues: 'every day',
+        legend: 'date',
+        legendOffset: -10,
+        tickPadding: 10,
       }}
       axisLeft={{
-        orient: "left",
+        orient: 'left',
         tickValues: 5, // added
         tickSize: 3,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "count", // added
+        legend: isDashboard ? undefined : 'Expense Amount', // added
         legendOffset: -40,
-        legendPosition: "middle",
+        legendPosition: 'middle',
       }}
       enableGridX={false}
       enableGridY={false}
       pointSize={8}
-      pointColor={{ theme: "background" }}
+      pointColor={{ theme: 'background' }}
       pointBorderWidth={2}
-      pointBorderColor={{ from: "serieColor" }}
+      pointBorderColor={{ from: 'serieColor' }}
       pointLabelYOffset={-12}
       useMesh={true}
       legends={[
         {
-          anchor: "bottom-right",
-          direction: "column",
+          anchor: 'bottom-right',
+          direction: 'column',
           justify: false,
-          translateX: 100,
+          translateX: 160,
           translateY: 0,
           itemsSpacing: 0,
-          itemDirection: "left-to-right",
+          itemDirection: 'left-to-right',
           itemWidth: 80,
           itemHeight: 20,
           itemOpacity: 0.75,
           symbolSize: 12,
-          symbolShape: "circle",
-          symbolBorderColor: "rgba(0, 0, 0, .5)",
+          symbolShape: 'circle',
+          symbolBorderColor: 'rgba(0, 0, 0, .5)',
           effects: [
             {
-              on: "hover",
+              on: 'hover',
               style: {
-                itemBackground: "rgba(0, 0, 0, .03)",
+                itemBackground: 'rgba(0, 0, 0, .03)',
                 itemOpacity: 1,
               },
             },

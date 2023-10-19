@@ -22,6 +22,7 @@ import Expenses from './scenes/expenses';
 import RecurringExpenses from './scenes/recurringExpenses';
 import AdminDashboard from './scenes/adminDashboard';
 import PrivateRouteAdmin from './components/PrivateRouteAdmin/PrivateRouteAdmin';
+import GoalForm from './scenes/form/goalForm';
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
             <Route path="/investments" element={<Investments />} />
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/recurringExpenses" element={<RecurringExpenses />} />
+            <Route path="/goalForm" element={<GoalForm />} />
             <Route path="/invoices" element={<Invoices />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/incomeForm" element={<IncomeForm />} />

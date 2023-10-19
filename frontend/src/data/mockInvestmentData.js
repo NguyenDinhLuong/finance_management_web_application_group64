@@ -1,32 +1,21 @@
-export const mockDataInvestments = [
-  {
-    id: 1,
-    amount: 1000.5,
-    category: 'Salary',
-    date: '2023-10-13',
-    duration: '< 1 year',
-    currency: 'AUD',
-    risk: 'low',
-    liquidity: 'highly liquid',
-  },
-  {
-    id: 2,
-    amount: 10000,
-    category: 'Salary',
-    date: '2023-10-13',
-    duration: '1-5 years',
-    currency: 'AUD',
-    risk: 'moderate',
-    liquidity: 'moderately liquid',
-  },
-  {
-    id: 3,
-    amount: 500.5,
-    category: 'Salary',
-    date: '2023-10-13',
-    duration: '> 5 years',
-    currency: 'AUD',
-    risk: 'high',
-    liquidity: 'illiquid',
-  },
-];
+import { useState, useEffect } from 'react';
+import apiInstance from '../apis/Axios';
+
+const useInvestmentsData = () => {
+  const [investmentData, setInvestmentsData] = useState([]);
+
+  useEffect(() => {
+    apiInstance
+      .get(`/investment/${localStorage.getItem('id')}`)
+      .then(response => {
+        setInvestmentsData(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+  }, []);
+
+  return investmentData;
+};
+
+export default useInvestmentsData;

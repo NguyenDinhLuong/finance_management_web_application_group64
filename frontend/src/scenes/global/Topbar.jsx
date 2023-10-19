@@ -40,7 +40,7 @@ const Topbar = () => {
   const role = localStorage.getItem('role');
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const { currency, setCurrency, rate, setRate } = useCurrency();
+  const { currency, setCurrency, setRate } = useCurrency();
   const [selectedCurrency, setSelectedCurrency] = useState(
     localStorage.getItem('currentCurrency')
   ); // Set default selected currency to AUD
@@ -61,6 +61,14 @@ const Topbar = () => {
         localStorage.setItem('rate', response.data);
         setRate(response.data); // Use setRate from context
         setCurrency(currencyCode); // Use setCurrency from context
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .put(`/goals/updateCurrencyExchange/${inputCurrency}/${currencyCode}`) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        console.log(response.data);
       })
       .catch(error => {
         console.error('There was an error fetching the incomes data', error);

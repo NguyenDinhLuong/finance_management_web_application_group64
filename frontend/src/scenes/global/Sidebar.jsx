@@ -18,6 +18,7 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
+import AdsClickIcon from '@mui/icons-material/AdsClick';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -212,6 +213,13 @@ const Sidebar = () => {
                   title="Recurring Expense Info"
                   to="/recurringExpenses"
                   icon={<ReceiptOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Financial Goal"
+                  to="/goalForm"
+                  icon={<AdsClickIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
