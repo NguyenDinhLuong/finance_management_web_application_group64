@@ -16,6 +16,8 @@ public class AddIncomeRequest {
     private String source;
     @NotBlank
     private String category;
+    @NotBlank
+    private String currency;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
     @NotBlank

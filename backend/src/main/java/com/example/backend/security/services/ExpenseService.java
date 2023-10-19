@@ -1,6 +1,7 @@
 package com.example.backend.security.services;
 
 import com.example.backend.model.Income;
+import com.example.backend.model.Investment;
 import com.example.backend.model.NormalExpense;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddExpenseRequest;
@@ -36,6 +37,7 @@ public class ExpenseService {
 
         expense.setAmount(addExpenseRequest.getAmount());
         expense.setCategory(addExpenseRequest.getCategory());
+        expense.setCurrency(addExpenseRequest.getCurrency());
         expense.setDate(addExpenseRequest.getDate());
         expense.setLocation(addExpenseRequest.getLocation());
         expense.setStatus(addExpenseRequest.getStatus());
@@ -57,6 +59,7 @@ public class ExpenseService {
             try {
                 double convertedAmount = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) expense.getAmount());
                 expense.setAmount((float) convertedAmount);
+                expense.setCurrency(outputCurrency);
                 expenseRepository.save(expense);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -37,6 +37,43 @@ public class CurrencyExchangeService {
         return response;
     }
 
+    public Double rate(String inputCurrencyCode, String outputCurrencyCode) throws JSONException {
+
+        if (inputCurrencyCode == null || outputCurrencyCode == null || inputCurrencyCode.isEmpty() || outputCurrencyCode.isEmpty()) {
+            System.out.println("Currency codes not valid.");
+            return 0.0;
+        }
+
+        inputCurrencyCode = inputCurrencyCode.toUpperCase();
+        outputCurrencyCode = outputCurrencyCode.toUpperCase();
+
+        String exchangeRates = getExchangeRates();
+
+        if (exchangeRates.isEmpty()) {
+            return 0.0;
+        }
+
+        JSONObject object = new JSONObject(exchangeRates);
+
+        double inputExchangeRate;
+        double outputExchangeRate;
+
+        try {
+            inputExchangeRate = object.getJSONObject("rates").getDouble(inputCurrencyCode);
+            outputExchangeRate = object.getJSONObject("rates").getDouble(outputCurrencyCode);
+        } catch (JSONException exception) {
+            System.out.println("Currency code not found.");
+            return 0.0;
+        }
+
+        double rate = outputExchangeRate/inputExchangeRate;
+
+        DecimalFormat format = new DecimalFormat("0.00");
+        rate = Double.parseDouble(format.format(rate));
+
+        return rate;
+    }
+
     public Double convertCurrency(String inputCurrencyCode, String outputCurrencyCode, Double currentValue) throws JSONException {
         if (currentValue == null || currentValue == 0 || currentValue < 0 || currentValue.isNaN()) {
             System.out.println("Invalid input currency value");

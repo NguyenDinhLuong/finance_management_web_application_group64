@@ -35,6 +35,7 @@ public class RecurringExpenseService {
 
         recurringExpense.setAmount(addRecurringExpenseRequest.getAmount());
         recurringExpense.setCategory(addRecurringExpenseRequest.getCategory());
+        recurringExpense.setCurrency(addRecurringExpenseRequest.getCurrency());
         recurringExpense.setStartDate(addRecurringExpenseRequest.getStartDate());
         recurringExpense.setLocation(addRecurringExpenseRequest.getLocation());
         recurringExpense.setFrequency(addRecurringExpenseRequest.getFrequency());
@@ -56,6 +57,7 @@ public class RecurringExpenseService {
             try {
                 double convertedAmount = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) recurringExpense.getAmount());
                 recurringExpense.setAmount((float) convertedAmount);
+                recurringExpense.setCurrency(outputCurrency);
                 recurringExpenseRepository.save(recurringExpense);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -21,6 +21,7 @@ public class Income {
     private float amount;
     private String source;
     private String category;
+    private String currency;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
@@ -32,10 +33,12 @@ public class Income {
     @JsonIgnore
     private User user;
 
-    public Income(float amount, String source, String category, Date date, String status, String location) {
+
+    public Income(float amount, String source, String category, String currency, Date date, String status, String location) {
         this.amount = amount;
         this.source = source;
         this.category = category;
+        this.currency = currency;
         this.date = date;
         this.status = status;
         this.location = location;

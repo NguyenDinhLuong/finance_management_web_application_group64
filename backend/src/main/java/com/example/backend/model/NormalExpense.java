@@ -20,6 +20,7 @@ public class NormalExpense {
     private Long id;
     private float amount;
     private String category;
+    private String currency;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
     private String location;
@@ -34,6 +35,16 @@ public class NormalExpense {
     public NormalExpense(float amount, String category, Date date, String location, String status, String paymentMethod) {
         this.amount = amount;
         this.category = category;
+        this.date = date;
+        this.location = location;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+    }
+
+    public NormalExpense(float amount, String category, String currency, Date date, String location, String status, String paymentMethod) {
+        this.amount = amount;
+        this.category = category;
+        this.currency = currency;
         this.date = date;
         this.location = location;
         this.status = status;

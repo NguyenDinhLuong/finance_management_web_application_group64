@@ -12,18 +12,13 @@ public class CurrencyController {
     @Autowired
     private CurrencyExchangeService currencyExchangeService;
 
-    @GetMapping("/convert")
-    public Float convertCurrency(
-            @RequestParam String inputCurrency,
-            @RequestParam String outputCurrency,
-            @RequestParam Double value) {
-
+    @GetMapping("/rate/{inputCurrency}/{outputCurrency}")
+    public float getRate(@PathVariable String inputCurrency, @PathVariable String outputCurrency) {
         try {
-            return currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, value).floatValue();
+            return currencyExchangeService.rate(inputCurrency, outputCurrency).floatValue();
         } catch (JSONException e) {
             e.printStackTrace();
             return 0.0F;
         }
     }
-
 }

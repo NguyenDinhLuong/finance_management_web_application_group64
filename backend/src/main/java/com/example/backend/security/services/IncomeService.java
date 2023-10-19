@@ -33,6 +33,7 @@ public class IncomeService  {
         Income income = new Income();
         income.setAmount(addIncomeRequest.getAmount());
         income.setCategory(addIncomeRequest.getCategory());
+        income.setCurrency(addIncomeRequest.getCurrency());
         income.setSource(addIncomeRequest.getSource());
         income.setDate(addIncomeRequest.getDate());
         income.setStatus(addIncomeRequest.getStatus());
@@ -54,6 +55,7 @@ public class IncomeService  {
             try {
                 double convertedAmount = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) income.getAmount());
                 income.setAmount((float) convertedAmount);
+                income.setCurrency(outputCurrency);
                 incomeRepository.save(income);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -73,4 +75,3 @@ public class IncomeService  {
         return totalAmount;
     }
 }
-

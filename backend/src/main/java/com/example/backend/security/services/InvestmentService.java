@@ -1,7 +1,8 @@
 package com.example.backend.security.services;
 
-import com.example.backend.model.Income;
 import com.example.backend.model.Investment;
+import com.example.backend.model.NormalExpense;
+import com.example.backend.model.RecurringExpense;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddInvestmentRequest;
 import com.example.backend.repository.InvestmentRepository;
@@ -35,6 +36,7 @@ public class InvestmentService {
         Investment investment = new Investment();
         investment.setAmount(addInvestmentRequest.getAmount());
         investment.setCategory(addInvestmentRequest.getCategory());
+        investment.setCurrency(addInvestmentRequest.getCurrency());
         investment.setDate(addInvestmentRequest.getDate());
         investment.setDuration(addInvestmentRequest.getDuration());
         investment.setRisk(addInvestmentRequest.getRisk());
@@ -56,6 +58,7 @@ public class InvestmentService {
             try {
                 double convertedAmount = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) investment.getAmount());
                 investment.setAmount((float) convertedAmount);
+                investment.setCurrency(outputCurrency);
                 investmentRepository.save(investment);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.model.Investment;
 import com.example.backend.model.NormalExpense;
 import com.example.backend.payload.request.AddExpenseRequest;
 import com.example.backend.payload.response.MessageResponse;

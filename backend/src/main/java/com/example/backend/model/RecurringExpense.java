@@ -19,6 +19,7 @@ public class RecurringExpense {
     private Long id;
     private float amount;
     private String category;
+    private String currency;
     private String frequency;
     private String location;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -34,6 +35,16 @@ public class RecurringExpense {
     public RecurringExpense(float amount, String category, String frequency, String location, Date startDate, Date endDate) {
         this.amount = amount;
         this.category = category;
+        this.frequency = frequency;
+        this.location = location;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public RecurringExpense(float amount, String category, String currency, String frequency, String location, Date startDate, Date endDate) {
+        this.amount = amount;
+        this.category = category;
+        this.currency = currency;
         this.frequency = frequency;
         this.location = location;
         this.startDate = startDate;

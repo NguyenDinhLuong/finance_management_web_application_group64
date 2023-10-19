@@ -22,6 +22,7 @@ public class Investment {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
     private String duration;
+    private String currency;
     private String risk;
     private String liquidity;
 
@@ -35,6 +36,16 @@ public class Investment {
         this.category = category;
         this.date = date;
         this.duration = duration;
+        this.risk = risk;
+        this.liquidity = liquidity;
+    }
+
+    public Investment(float amount, String category, Date date, String duration, String currency, String risk, String liquidity) {
+        this.amount = amount;
+        this.category = category;
+        this.date = date;
+        this.duration = duration;
+        this.currency = currency;
         this.risk = risk;
         this.liquidity = liquidity;
     }
