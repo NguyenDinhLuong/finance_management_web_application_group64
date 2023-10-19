@@ -4,9 +4,9 @@ import apiInstance from './Axios';
 export const addInvestment = async ({
   amount,
   category,
+  currency,
   date,
   duration,
-  currency,
   risk,
   liquidity,
   user_id,
@@ -15,9 +15,9 @@ export const addInvestment = async ({
     .post('/investment/addInvestment', {
       amount,
       category,
+      currency,
       date,
       duration,
-      currency,
       risk,
       liquidity,
       user_id,

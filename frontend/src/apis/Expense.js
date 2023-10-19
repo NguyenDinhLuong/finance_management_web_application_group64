@@ -4,9 +4,9 @@ import apiInstance from './Axios';
 export const addExpense = async ({
   amount,
   category,
+  currency,
   date,
   location,
-  currency,
   status,
   paymentMethod,
   user_id,
@@ -15,9 +15,9 @@ export const addExpense = async ({
     .post('/expenses/addExpense', {
       amount,
       category,
+      currency,
       date,
       location,
-      currency,
       status,
       paymentMethod,
       user_id,
@@ -36,9 +36,9 @@ export const addExpense = async ({
 export const addRecurringExpense = async ({
   amount,
   category,
+  currency,
   frequency,
   location,
-  currency,
   startDate,
   endDate,
   user_id,
@@ -51,9 +51,9 @@ export const addRecurringExpense = async ({
     .post('/recurringExpenses/addRecurringExpense', {
       amount,
       category,
+      currency,
       frequency,
       location,
-      currency,
       startDate,
       endDate,
       user_id,

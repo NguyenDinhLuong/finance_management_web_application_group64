@@ -16,6 +16,7 @@ import React, { useState } from 'react';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
 import { Check } from '@mui/icons-material';
+import { useCurrency } from '../../provider/CurrencyProvider';
 
 const currencies = [
   { code: 'AUD', flag: '🇦🇺' },
@@ -39,6 +40,7 @@ const Topbar = () => {
   const role = localStorage.getItem('role');
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const { currency, setCurrency, rate, setRate } = useCurrency();
   const [selectedCurrency, setSelectedCurrency] = useState(
     localStorage.getItem('currentCurrency')
   ); // Set default selected currency to AUD
@@ -49,10 +51,20 @@ const Topbar = () => {
   };
 
   const handleMenuItemClick = currencyCode => {
-    console.log(inputCurrency);
     setSelectedCurrency(currencyCode);
     localStorage.setItem('currentCurrency', currencyCode);
     setAnchorEl(null);
+    console.log(currencyCode);
+    apiInstance
+      .get(`/currency/rate/${inputCurrency}/${currencyCode}`)
+      .then(response => {
+        localStorage.setItem('rate', response.data);
+        setRate(response.data); // Use setRate from context
+        setCurrency(currencyCode); // Use setCurrency from context
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
     apiInstance
       .put(`/incomes/updateCurrencyExchange/${inputCurrency}/${currencyCode}`) // this assumes the endpoint for fetching incomes is `/incomes`
       .then(response => {
@@ -97,6 +109,8 @@ const Topbar = () => {
       .then(response => {
         toast.success('Successfully logout!');
         cleanToken();
+        localStorage.setItem('rate', 1);
+        localStorage.setItem('currentCurrency', 'AUD');
         navigate('/login');
         return true;
       })
@@ -104,6 +118,39 @@ const Topbar = () => {
         console.log('logout error: ', error.response);
         toast.error('Something wrong with your account.');
         return false;
+      });
+    console.log(currency);
+    apiInstance
+      .put(`/incomes/updateCurrencyExchange/${currency}/AUD`) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .put(`/investment/updateCurrencyExchange/${currency}/AUD`) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .put(`/expenses/updateCurrencyExchange/${currency}/AUD`) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+    apiInstance
+      .put(`/recurringExpenses/updateCurrencyExchange/${currency}/AUD`) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
       });
     return response;
   };

@@ -19,9 +19,9 @@ const InvestmentForm = () => {
     const updatedData = {
       amount: values.amount,
       category: values.category,
+      currency: localStorage.getItem('currentCurrency'),
       date: values.date,
       duration: values.duration,
-      currency: localStorage.getItem('currentCurrency'),
       risk: values.risk,
       liquidity: values.liquidity,
       user_id: userId,

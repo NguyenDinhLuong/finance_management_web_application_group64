@@ -5,10 +5,10 @@ export const addIncome = async ({
   amount,
   source,
   category,
+  currency,
   date,
   status,
   location,
-  currency,
   user_id,
 }) => {
   const response = await apiInstance
@@ -16,10 +16,10 @@ export const addIncome = async ({
       amount,
       source,
       category,
+      currency,
       date,
       status,
       location,
-      currency,
       user_id,
     })
     .then(response => {

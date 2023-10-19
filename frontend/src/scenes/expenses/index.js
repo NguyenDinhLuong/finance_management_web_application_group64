@@ -3,13 +3,17 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
 import Header from '../../components/Header';
 import { useTheme } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import apiInstance from '../../apis/Axios';
+import { useCurrency } from '../../provider/CurrencyProvider';
 
 const Expenses = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [expensesData, setExpensesData] = useState([]);
+  const { currency, rate } = useCurrency();
+  const prevRateRef = useRef();
+  const prevCurrencyRef = useRef();
 
   useEffect(() => {
     apiInstance
@@ -23,11 +27,31 @@ const Expenses = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (rate !== prevRateRef.current || currency !== prevCurrencyRef.current) {
+      const convertedData = expensesData.map(expensesData => ({
+        ...expensesData,
+        amount: expensesData.amount * rate,
+        currency: currency,
+      }));
+      setExpensesData(convertedData);
+    }
+
+    // Update the refs with the current values
+    prevRateRef.current = rate;
+    prevCurrencyRef.current = currency;
+  }, [currency, rate, expensesData]);
+
   const columns = [
     { field: 'id', headerName: 'ID', flex: 0.5 },
     {
       field: 'amount',
       headerName: 'Amount',
+    },
+    {
+      field: 'currency',
+      headerName: 'Currency',
+      flex: 1,
     },
     {
       field: 'category',

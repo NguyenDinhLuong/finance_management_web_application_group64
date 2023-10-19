@@ -20,6 +20,7 @@ const IncomeForm = () => {
       amount: values.amount,
       source: values.source,
       category: values.category,
+      currency: localStorage.getItem('currentCurrency'),
       date: values.date,
       status: values.status,
       location: values.location,

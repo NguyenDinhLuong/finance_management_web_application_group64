@@ -19,9 +19,9 @@ const RecurringExpenseForm = () => {
     const updatedData = {
       amount: values.amount,
       category: values.category,
+      currency: localStorage.getItem('currentCurrency'),
       startDate: values.startDate,
       location: values.location,
-      currency: localStorage.getItem('currentCurrency'),
       frequency: values.frequency,
       endDate: values.endDate,
       user_id: userId,

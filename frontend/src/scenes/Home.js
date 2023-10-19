@@ -4,6 +4,7 @@ import Topbar from './global/Topbar';
 import Sidebar from './global/Sidebar';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { ColorModeContext, useMode } from '../theme';
+import { CurrencyProvider } from '../provider/CurrencyProvider';
 
 function Home() {
   const [theme, colorMode] = useMode();
@@ -16,8 +17,10 @@ function Home() {
         <div className="app">
           <Sidebar isSidebar={isSidebar} />
           <main className="content">
-            <Topbar setIsSidebar={setIsSidebar} />
-            <Outlet />
+            <CurrencyProvider>
+              <Topbar setIsSidebar={setIsSidebar} />
+              <Outlet />
+            </CurrencyProvider>
           </main>
         </div>
       </ThemeProvider>

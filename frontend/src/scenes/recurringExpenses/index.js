@@ -3,13 +3,17 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
 import Header from '../../components/Header';
 import { useTheme } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import apiInstance from '../../apis/Axios';
+import { useCurrency } from '../../provider/CurrencyProvider';
 
 const RecurringExpenses = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [recurringExpensesData, setRecurringExpensesData] = useState([]);
+  const { currency, rate } = useCurrency();
+  const prevRateRef = useRef();
+  const prevCurrencyRef = useRef();
 
   useEffect(() => {
     apiInstance
@@ -23,11 +27,33 @@ const RecurringExpenses = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (rate !== prevRateRef.current || currency !== prevCurrencyRef.current) {
+      const convertedData = recurringExpensesData.map(
+        recurringExpensesData => ({
+          ...recurringExpensesData,
+          amount: recurringExpensesData.amount * rate,
+          currency: currency,
+        })
+      );
+      setRecurringExpensesData(convertedData);
+    }
+
+    // Update the refs with the current values
+    prevRateRef.current = rate;
+    prevCurrencyRef.current = currency;
+  }, [currency, rate, recurringExpensesData]);
+
   const columns = [
     { field: 'id', headerName: 'ID', flex: 0.5 },
     {
       field: 'amount',
       headerName: 'Amount',
+    },
+    {
+      field: 'currency',
+      headerName: 'Currency',
+      flex: 1,
     },
     {
       field: 'category',
@@ -63,7 +89,10 @@ const RecurringExpenses = () => {
 
   return (
     <Box m="20px">
-      <Header title="Expenses" subtitle="List of your expenses" />
+      <Header
+        title="Recurring Expenses"
+        subtitle="List of your recurring expenses"
+      />
       <Box
         m="40px 0 0 0"
         height="75vh"

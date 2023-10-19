@@ -12,7 +12,8 @@ import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import apiInstance from '../../apis/Axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useCurrency } from '../../provider/CurrencyProvider';
 
 const calculateTax = income => {
   if (income <= 18200) {
@@ -35,51 +36,72 @@ const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [totalIncomeAmount, setTotalIncomeAmount] = useState(0);
-  const [totalExpenseAmount, setTotalExpenseAmount] = useState(0);
+  const [totalNormalExpenseAmount, setTotalNormalExpenseAmount] = useState(0);
   const [totalRecurringExpenseAmount, setTotalRecurringExpenseAmount] =
     useState(0);
   const [totalInvestmentAmount, setTotalInvestmentAmount] = useState(0);
   const [totalTaxAmount, setTotalTaxAmount] = useState(0);
+  const { currency, rate } = useCurrency();
+  const prevRateRef = useRef();
+  const prevCurrencyRef = useRef();
 
   useEffect(() => {
-    apiInstance
-      .get(`/incomes/totalAmount/${localStorage.getItem('id')}`)
-      .then(response => {
-        //console.log(response.data);
-        setTotalIncomeAmount(response.data);
-        setTotalTaxAmount(calculateTax(response.data));
-      })
-      .catch(error => {
-        console.error('There was an error fetching the incomes data', error);
-      });
-    apiInstance
-      .get(`/expenses/totalAmount/${localStorage.getItem('id')}`)
-      .then(response => {
-        //console.log(response.data);
-        setTotalExpenseAmount(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the incomes data', error);
-      });
-    apiInstance
-      .get(`/investment/totalAmount/${localStorage.getItem('id')}`)
-      .then(response => {
-        //console.log(response.data);
-        setTotalInvestmentAmount(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the incomes data', error);
-      });
-    apiInstance
-      .get(`/recurringExpenses/totalAmount/${localStorage.getItem('id')}`)
-      .then(response => {
-        //console.log(response.data);
-        setTotalRecurringExpenseAmount(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the incomes data', error);
-      });
+    const fetchData = async () => {
+      try {
+        const incomeResponse = await apiInstance.get(
+          `/incomes/totalAmount/${localStorage.getItem('id')}`
+        );
+        setTotalIncomeAmount(incomeResponse.data);
+        setTotalTaxAmount(calculateTax(incomeResponse.data));
+
+        const expenseResponse = await apiInstance.get(
+          `/expenses/totalAmount/${localStorage.getItem('id')}`
+        );
+        setTotalNormalExpenseAmount(expenseResponse.data);
+
+        const investmentResponse = await apiInstance.get(
+          `/investment/totalAmount/${localStorage.getItem('id')}`
+        );
+        setTotalInvestmentAmount(investmentResponse.data);
+
+        const recurringExpenseResponse = await apiInstance.get(
+          `/recurringExpenses/totalAmount/${localStorage.getItem('id')}`
+        );
+        setTotalRecurringExpenseAmount(recurringExpenseResponse.data);
+      } catch (error) {
+        console.error('There was an error fetching the data', error);
+      }
+    };
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    const updatedTotalIncomeAmount = totalIncomeAmount * rate;
+    const updatedTotalInvestmentAmount = totalInvestmentAmount * rate;
+    const updatedTotalNormalExpenseAmount = totalNormalExpenseAmount * rate;
+    const updatedTotalRecurringExpenseAmount =
+      totalRecurringExpenseAmount * rate;
+    const updatedTotalTaxAmount = totalTaxAmount * rate;
+    // Check if rate or currency has changed from their previous values
+    if (rate !== prevRateRef.current || currency !== prevCurrencyRef.current) {
+      setTotalIncomeAmount(updatedTotalIncomeAmount);
+      setTotalInvestmentAmount(updatedTotalInvestmentAmount);
+      setTotalNormalExpenseAmount(updatedTotalNormalExpenseAmount);
+      setTotalRecurringExpenseAmount(updatedTotalRecurringExpenseAmount);
+      setTotalTaxAmount(updatedTotalTaxAmount);
+    }
+    // Update the refs with the current values
+    prevRateRef.current = rate;
+    prevCurrencyRef.current = currency;
+  }, [
+    currency,
+    rate,
+    totalIncomeAmount,
+    totalInvestmentAmount,
+    totalNormalExpenseAmount,
+    totalRecurringExpenseAmount,
+    totalTaxAmount,
+  ]);
 
   return (
     <Box m="20px">
@@ -104,9 +126,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title={
-              totalIncomeAmount + ' ' + localStorage.getItem('currentCurrency')
-            }
+            title={totalIncomeAmount + ' ' + currency}
             subtitle="Total Income"
             progress="0.75"
             increase="+14%"
@@ -126,10 +146,10 @@ const Dashboard = () => {
         >
           <StatBox
             title={
-              totalExpenseAmount +
+              totalNormalExpenseAmount +
               totalRecurringExpenseAmount +
               ' ' +
-              localStorage.getItem('currentCurrency')
+              currency
             }
             subtitle="Total Expense"
             progress="0.50"
@@ -149,11 +169,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title={
-              totalInvestmentAmount +
-              ' ' +
-              localStorage.getItem('currentCurrency')
-            }
+            title={totalInvestmentAmount + ' ' + currency}
             subtitle="Total Investment"
             progress="0.30"
             increase="+5%"
@@ -172,7 +188,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title={totalTaxAmount}
+            title={totalTaxAmount + ' ' + currency}
             subtitle="Total Taxes"
             progress="0.80"
             increase="+43%"
