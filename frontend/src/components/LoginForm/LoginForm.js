@@ -7,6 +7,8 @@ import Input from '@mui/joy/Input';
 import Link from '@mui/joy/Link';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { login } from '../../apis/User';
+import { addGoal } from '../../apis/Goal';
+import apiInstance from '../../apis/Axios';
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -22,11 +24,27 @@ export default function LoginForm() {
           username: formElements.username.value,
           password: formElements.password.value,
         });
-        console.log(isSuccess);
+
         if (isSuccess) {
           localStorage.setItem('rate', 1);
+          localStorage.setItem('goalId', 1);
           if (localStorage.getItem('currentCurrency') === null) {
             localStorage.setItem('currentCurrency', 'AUD');
+          }
+
+          const goalResponse = await apiInstance.get(
+            `/goals/${localStorage.getItem('id')}`
+          );
+
+          if (goalResponse.data === '') {
+            const isSuccessAddGoal = await addGoal({
+              targetIncome: 10000,
+              maximumExpense: 10000,
+              maximumInvestment: 10000,
+              currency: localStorage.getItem('currentCurrency'),
+              user_id: localStorage.getItem('id'),
+            });
+            console.log(isSuccessAddGoal);
           }
           navigate('/');
           setIsLoading(false);

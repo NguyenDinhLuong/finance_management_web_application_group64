@@ -27,3 +27,28 @@ export const addGoal = async ({
     });
   return response;
 };
+
+export const updateGoal = async ({
+  targetIncome,
+  maximumExpense,
+  maximumInvestment,
+  currency,
+  id,
+}) => {
+  const response = await apiInstance
+    .put(`/goals/update/${id}`, {
+      targetIncome,
+      maximumExpense,
+      maximumInvestment,
+      currency,
+    })
+    .then(response => {
+      toast.success('Goal updated successfully!');
+      return true;
+    })
+    .catch(error => {
+      toast.error('Goal updated unsuccessfully!');
+      return false;
+    });
+  return response;
+};

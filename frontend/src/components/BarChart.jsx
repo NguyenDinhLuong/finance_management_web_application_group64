@@ -1,16 +1,33 @@
 import { useTheme } from '@mui/material';
 import { ResponsiveBar } from '@nivo/bar';
 import { tokens } from '../theme';
-import useInvestmentsData from '../data/mockInvestmentData';
+import React, { useState, useEffect } from 'react';
+import apiInstance from '../apis/Axios';
 
 const BarChart = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const investmentsData = useInvestmentsData();
+  const [investmentData, setInvestmentsData] = useState([]);
+
+  useEffect(() => {
+    apiInstance
+      .get(`/investment/${localStorage.getItem('id')}`)
+      .then(response => {
+        if (Array.isArray(response.data)) {
+          setInvestmentsData(response.data);
+        } else {
+          console.error('Expected array but received:', response.data);
+          setInvestmentsData([]);
+        }
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+  }, []);
 
   return (
     <ResponsiveBar
-      data={investmentsData}
+      data={investmentData}
       theme={{
         axis: {
           domain: {

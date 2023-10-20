@@ -14,7 +14,6 @@ import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import PaymentIcon from '@mui/icons-material/Payment';
 import PaidIcon from '@mui/icons-material/Paid';
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
-import CalculateIcon from '@mui/icons-material/Calculate';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
@@ -178,13 +177,6 @@ const Sidebar = () => {
                   title="Investment"
                   to="/investmentForm"
                   icon={<CurrencyBitcoinIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
-                <Item
-                  title="Tax Calculation"
-                  to="/"
-                  icon={<CalculateIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />

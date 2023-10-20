@@ -2,10 +2,40 @@ import { Box, Button, TextField } from '@mui/material';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import Header from '../../components/Header';
-import { addGoal } from '../../apis/Goal';
+import React, { useState, useEffect } from 'react';
+import apiInstance from '../../apis/Axios';
+import { updateGoal } from '../../apis/Goal';
 
 const GoalForm = () => {
-  const userId = localStorage.getItem('id');
+  //const userId = localStorage.getItem('id');
+
+  const [initialValues, setInitialValues] = useState({
+    targetIncome: 0,
+    maximumExpense: 0,
+    maximumInvestment: 0,
+  });
+
+  const checkoutSchema = yup.object().shape({
+    targetIncome: yup.number().required('required'),
+    maximumExpense: yup.number().required('required'),
+    maximumInvestment: yup.number().required('required'),
+  });
+
+  useEffect(() => {
+    apiInstance
+      .get(`/goals/${localStorage.getItem('id')}`)
+      .then(response => {
+        setInitialValues({
+          targetIncome: response.data.targetIncome,
+          maximumExpense: response.data.maximumExpense,
+          maximumInvestment: response.data.maximumInvestment,
+        });
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+  }, []);
 
   const handleFormSubmit = values => {
     const updatedData = {
@@ -13,10 +43,10 @@ const GoalForm = () => {
       maximumExpense: values.maximumExpense,
       maximumInvestment: values.maximumInvestment,
       currency: localStorage.getItem('currentCurrency'),
-      user_id: userId,
+      id: 1,
     };
 
-    const isSuccess = addGoal({
+    const isSuccess = updateGoal({
       ...updatedData,
     });
 
@@ -26,12 +56,13 @@ const GoalForm = () => {
 
   return (
     <Box m="20px">
-      <Header title="CREATE GOAL" subtitle="Create a goal" />
+      <Header title="YOUR GOAL" subtitle="Update the goal" />
 
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
         validationSchema={checkoutSchema}
+        enableReinitialize={true}
       >
         {({
           values,
@@ -99,7 +130,7 @@ const GoalForm = () => {
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Create New Goal
+                Update Goal
               </Button>
             </Box>
           </form>
@@ -107,17 +138,6 @@ const GoalForm = () => {
       </Formik>
     </Box>
   );
-};
-
-const checkoutSchema = yup.object().shape({
-  targetIncome: yup.string().required('required'),
-  maximumExpense: yup.string().required('required'),
-  maximumInvestment: yup.string().required('required'),
-});
-const initialValues = {
-  targetIncome: '',
-  maximumExpense: '',
-  maximumInvestment: '',
 };
 
 export default GoalForm;

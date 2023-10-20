@@ -8,7 +8,12 @@ const useInvestmentsData = () => {
     apiInstance
       .get(`/investment/${localStorage.getItem('id')}`)
       .then(response => {
-        setInvestmentsData(response.data);
+        if (Array.isArray(response.data)) {
+          setInvestmentsData(response.data);
+        } else {
+          console.error('Expected array but received:', response.data);
+          setInvestmentsData([]);
+        }
       })
       .catch(error => {
         console.error('There was an error fetching the incomes data', error);

@@ -1,12 +1,34 @@
 import { ResponsivePie } from '@nivo/pie';
 import { tokens } from '../theme';
 import { useTheme } from '@mui/material';
-import useIncomesData from '../data/mockIncomeData';
+import React, { useState, useEffect } from 'react';
+import apiInstance from '../apis/Axios';
 
 const PieChart = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const incomesData = useIncomesData();
+  const [incomesData, setIncomesData] = useState([]);
+
+  useEffect(() => {
+    apiInstance
+      .get(`/incomes/${localStorage.getItem('id')}`)
+      .then(response => {
+        if (Array.isArray(response.data)) {
+          const updatedData = response.data.map(item => ({
+            ...item,
+            id: item.category,
+            value: item.amount,
+          }));
+          setIncomesData(updatedData);
+        } else {
+          console.error('Expected array but received:', response.data);
+          setIncomesData([]);
+        }
+      })
+      .catch(error => {
+        console.error('There was an error fetching the incomes data', error);
+      });
+  }, []);
 
   return (
     <ResponsivePie
@@ -65,7 +87,7 @@ const PieChart = () => {
           type: 'patternDots',
           background: 'inherit',
           color: 'rgba(255, 255, 255, 0.3)',
-          size: 4,
+          size: 3,
           padding: 1,
           stagger: true,
         },
@@ -77,31 +99,6 @@ const PieChart = () => {
           rotation: -45,
           lineWidth: 6,
           spacing: 10,
-        },
-      ]}
-      legends={[
-        {
-          anchor: 'bottom',
-          direction: 'row',
-          justify: false,
-          translateX: 0,
-          translateY: 56,
-          itemsSpacing: 0,
-          itemWidth: 100,
-          itemHeight: 18,
-          itemTextColor: '#999',
-          itemDirection: 'left-to-right',
-          itemOpacity: 1,
-          symbolSize: 18,
-          symbolShape: 'circle',
-          effects: [
-            {
-              on: 'hover',
-              style: {
-                itemTextColor: '#000',
-              },
-            },
-          ],
         },
       ]}
     />

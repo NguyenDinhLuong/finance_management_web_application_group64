@@ -1,6 +1,8 @@
 import { ResponsiveLine } from '@nivo/line';
 import { useTheme } from '@mui/material';
 import { tokens } from '../theme';
+import React, { useState, useEffect } from 'react';
+import apiInstance from '../apis/Axios';
 
 export const mockDataExpenses = [
   {
@@ -116,7 +118,7 @@ export const mockDataExpenses = [
 ];
 
 // Convert mockDataExpenses to line chart format
-const expensesData = {
+export const exampleExpensesData = {
   id: 'Expenses',
   data: mockDataExpenses.map(expense => ({
     x: expense.date,
@@ -125,11 +127,42 @@ const expensesData = {
 };
 
 // Combined data for the line chart
-export const lineChartData = [expensesData];
+export const exampleLineChartData = [exampleExpensesData];
 
 const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [mockExpenseData, setMockExpensesData] = useState([]);
+
+  // Fetch expense data on component mount
+  useEffect(() => {
+    apiInstance
+      .get(`/expenses/${localStorage.getItem('id')}`)
+      .then(response => {
+        if (Array.isArray(response.data)) {
+          setMockExpensesData(response.data);
+        } else {
+          console.error('Expected array but received:', response.data);
+          setMockExpensesData([]);
+        }
+      })
+      .catch(error => {
+        console.error('There was an error fetching the expenses data', error);
+      });
+  }, []);
+
+  const lineChartData =
+    mockExpenseData && mockExpenseData.length > 0
+      ? [
+          {
+            id: 'Expenses',
+            data: mockExpenseData.map(expense => ({
+              x: expense.date,
+              y: expense.amount,
+            })),
+          },
+        ]
+      : [];
 
   return (
     <ResponsiveLine

@@ -1,6 +1,5 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import { tokens } from '../../theme';
-import { mockTransactions } from '../../data/mockData';
 import Header from '../../components/Header';
 import LineChart from '../../components/LineChart';
 import BarChart from '../../components/BarChart';
@@ -9,10 +8,11 @@ import ProgressCircle from '../../components/ProgressCircle';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
-import CalculateIcon from '@mui/icons-material/Calculate';
 import apiInstance from '../../apis/Axios';
 import React, { useState, useEffect, useRef } from 'react';
 import { useCurrency } from '../../provider/CurrencyProvider';
+import PieChart from '../../components/PieChart';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 const calculateTax = income => {
   if (income <= 18200) {
@@ -74,9 +74,15 @@ const Dashboard = () => {
         const goalResponse = await apiInstance.get(
           `/goals/${localStorage.getItem('id')}`
         );
-        setTargetIncome(goalResponse.data.targetIncome);
-        setMaximumExpense(goalResponse.data.maximumExpense);
-        setMaximumInvestment(goalResponse.data.maximumInvestment);
+        if (
+          goalResponse.data.targetIncome != null &&
+          goalResponse.data.maximumExpense != null &&
+          goalResponse.data.maximumInvestment != null
+        ) {
+          setTargetIncome(goalResponse.data.targetIncome);
+          setMaximumExpense(goalResponse.data.maximumExpense);
+          setMaximumInvestment(goalResponse.data.maximumInvestment);
+        }
       } catch (error) {
         console.error('There was an error fetching the data', error);
       }
@@ -165,26 +171,37 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title={
-              totalNormalExpenseAmount +
-              totalRecurringExpenseAmount +
-              ' ' +
-              currency
-            }
-            subtitle="Total Expense"
-            progress={
-              (totalNormalExpenseAmount + totalRecurringExpenseAmount) /
-              maximumExpense
-            }
+            title={totalNormalExpenseAmount + ' ' + currency}
+            subtitle="Total Normal Expense"
+            progress={totalNormalExpenseAmount / maximumExpense}
             increase={
-              Math.round(
-                ((totalNormalExpenseAmount + totalRecurringExpenseAmount) /
-                  maximumExpense) *
-                  100
-              ) + '%'
+              Math.round((totalNormalExpenseAmount / maximumExpense) * 100) +
+              '%'
             }
             icon={
               <ShoppingCartCheckoutIcon
+                sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
+              />
+            }
+          />
+        </Box>
+        <Box
+          gridColumn="span 3"
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <StatBox
+            title={totalRecurringExpenseAmount + ' ' + currency}
+            subtitle="Total Recurring Expense"
+            progress={totalRecurringExpenseAmount / maximumExpense}
+            increase={
+              Math.round((totalRecurringExpenseAmount / maximumExpense) * 100) +
+              '%'
+            }
+            icon={
+              <AccountBalanceIcon
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
               />
             }
@@ -211,15 +228,7 @@ const Dashboard = () => {
               />
             }
           />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
+          {/* <StatBox
             title={totalTaxAmount + ' ' + currency}
             subtitle="Total Taxes"
             progress="1"
@@ -228,7 +237,7 @@ const Dashboard = () => {
                 sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
               />
             }
-          />
+          /> */}
         </Box>
 
         {/* ROW 2 */}
@@ -250,14 +259,7 @@ const Dashboard = () => {
                 fontWeight="600"
                 color={colors.grey[100]}
               >
-                Revenue Generated
-              </Typography>
-              <Typography
-                variant="h3"
-                fontWeight="bold"
-                color={colors.greenAccent[500]}
-              >
-                $59,342.32
+                Expenses
               </Typography>
             </Box>
           </Box>
@@ -280,40 +282,24 @@ const Dashboard = () => {
             p="15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Transactions
+              Taxes
             </Typography>
           </Box>
-          {mockTransactions.map((transaction, i) => (
-            <Box
-              key={`${transaction.txId}-${i}`}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              p="15px"
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            mt="25px"
+          >
+            <ProgressCircle size="125" />
+            <Typography
+              variant="h5"
+              color={colors.greenAccent[500]}
+              sx={{ mt: '15px', whiteSpace: 'pre-line' }}
             >
-              <Box>
-                <Typography
-                  color={colors.greenAccent[500]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  {transaction.txId}
-                </Typography>
-                <Typography color={colors.grey[100]}>
-                  {transaction.user}
-                </Typography>
-              </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
-              <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
-              >
-                ${transaction.cost}
-              </Box>
-            </Box>
-          ))}
+              {'Total Taxes: ' + totalTaxAmount + ' ' + currency}
+            </Typography>
+          </Box>
         </Box>
 
         {/* ROW 3 */}
@@ -324,7 +310,7 @@ const Dashboard = () => {
           p="30px"
         >
           <Typography variant="h5" fontWeight="600">
-            Campaign
+            Goals
           </Typography>
           <Box
             display="flex"
@@ -336,11 +322,21 @@ const Dashboard = () => {
             <Typography
               variant="h5"
               color={colors.greenAccent[500]}
-              sx={{ mt: '15px' }}
+              sx={{ mt: '15px', whiteSpace: 'pre-line' }}
             >
-              $48,352 revenue generated
+              {'Target Income: ' +
+                targetIncome +
+                ' ' +
+                currency +
+                '\n' +
+                'Maximum Expense: ' +
+                maximumExpense +
+                currency +
+                '\n' +
+                'Maximum Investment: ' +
+                maximumInvestment +
+                currency}
             </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
           </Box>
         </Box>
         <Box
@@ -369,10 +365,10 @@ const Dashboard = () => {
             fontWeight="600"
             sx={{ padding: '30px 30px 0 30px' }}
           >
-            Sales Quantity
+            Incomes
           </Typography>
           <Box height="250px" mt="-20px">
-            <BarChart isDashboard={true} />
+            <PieChart />
           </Box>
         </Box>
       </Box>

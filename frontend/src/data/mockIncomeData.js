@@ -45,14 +45,19 @@ const useIncomesData = () => {
 
   useEffect(() => {
     apiInstance
-      .get(`/incomes/${localStorage.getItem('id')}`)
+      .get(`/investment/${localStorage.getItem('id')}`)
       .then(response => {
-        const updatedData = response.data.map(item => ({
-          ...item,
-          id: item.category,
-          value: item.amount,
-        }));
-        setIncomesData(updatedData);
+        if (Array.isArray(response.data)) {
+          const updatedData = response.data.map(item => ({
+            ...item,
+            id: item.category,
+            value: item.amount,
+          }));
+          setIncomesData(updatedData);
+        } else {
+          console.error('Expected array but received:', response.data);
+          setIncomesData([]);
+        }
       })
       .catch(error => {
         console.error('There was an error fetching the incomes data', error);
