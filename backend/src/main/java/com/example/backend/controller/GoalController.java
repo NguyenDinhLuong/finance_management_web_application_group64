@@ -2,13 +2,13 @@ package com.example.backend.controller;
 
 import com.example.backend.model.Goal;
 import com.example.backend.payload.request.AddGoalRequest;
+import com.example.backend.payload.request.UpdateGoalRequest;
 import com.example.backend.payload.response.MessageResponse;
 import com.example.backend.security.services.GoalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -26,6 +26,16 @@ public class GoalController {
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Goal created unsuccessfully. Please check again!"));
         }
         return ResponseEntity.ok(new MessageResponse("Goal created successfully!"));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Goal> updateGoal(@PathVariable Long id, @RequestBody UpdateGoalRequest updateGoalRequest) {
+        try {
+            Goal goal = goalService.updateGoal(id, updateGoalRequest);
+            return new ResponseEntity<>(goal, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // Get the goal

@@ -1,10 +1,10 @@
 package com.example.backend.payload.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class AddRecurringExpenseRequest {
@@ -14,12 +14,14 @@ public class AddRecurringExpenseRequest {
     @NotBlank
     private String currency;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date startDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
     @NotBlank
     private String location;
     @NotBlank
     private String frequency;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date endDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
     private Long user_id;
 }

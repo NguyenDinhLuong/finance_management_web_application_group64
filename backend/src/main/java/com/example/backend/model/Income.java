@@ -1,12 +1,15 @@
 package com.example.backend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -24,17 +27,18 @@ public class Income {
     private String currency;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
     private String status;
     private String location;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
 
 
-    public Income(float amount, String source, String category, String currency, Date date, String status, String location) {
+    public Income(float amount, String source, String category, String currency, LocalDate date, String status, String location) {
         this.amount = amount;
         this.source = source;
         this.category = category;

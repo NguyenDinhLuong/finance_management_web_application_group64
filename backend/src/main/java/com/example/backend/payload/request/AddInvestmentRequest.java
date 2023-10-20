@@ -1,9 +1,11 @@
 package com.example.backend.payload.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -14,7 +16,8 @@ public class AddInvestmentRequest {
     @NotBlank
     private String currency;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
     @NotBlank
     private String duration;
     @NotBlank

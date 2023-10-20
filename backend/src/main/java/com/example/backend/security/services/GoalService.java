@@ -1,9 +1,9 @@
 package com.example.backend.security.services;
 
 import com.example.backend.model.Goal;
-import com.example.backend.model.Income;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddGoalRequest;
+import com.example.backend.payload.request.UpdateGoalRequest;
 import com.example.backend.repository.GoalRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -38,6 +38,18 @@ public class GoalService {
         goal.setMaximumInvestment(addGoalRequest.getMaximumInvestment());
         goal.setCurrency(addGoalRequest.getCurrency());
         goal.setUser(user);
+        goalRepository.save(goal);
+        return goal;
+    }
+
+    @Transactional
+    public Goal updateGoal(Long id, UpdateGoalRequest updateGoalRequest) {
+        Goal goal = goalRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Goal not found with id " + id));
+        goal.setTargetIncome(updateGoalRequest.getTargetIncome());
+        goal.setMaximumExpense(updateGoalRequest.getMaximumExpense());
+        goal.setMaximumInvestment(updateGoalRequest.getMaximumInvestment());
+        goal.setCurrency(updateGoalRequest.getCurrency());
         goalRepository.save(goal);
         return goal;
     }

@@ -1,7 +1,5 @@
 package com.example.backend.security.services;
 
-import com.example.backend.model.Income;
-import com.example.backend.model.Investment;
 import com.example.backend.model.NormalExpense;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddExpenseRequest;
