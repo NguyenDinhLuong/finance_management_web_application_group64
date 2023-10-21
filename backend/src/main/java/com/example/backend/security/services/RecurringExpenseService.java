@@ -1,8 +1,11 @@
 package com.example.backend.security.services;
 
+import com.example.backend.model.NormalExpense;
 import com.example.backend.model.RecurringExpense;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddRecurringExpenseRequest;
+import com.example.backend.payload.request.UpdateExpenseRequest;
+import com.example.backend.payload.request.UpdateRecurringExpenseRequest;
 import com.example.backend.repository.RecurringExpenseRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -40,6 +43,21 @@ public class RecurringExpenseService {
         recurringExpense.setFrequency(addRecurringExpenseRequest.getFrequency());
         recurringExpense.setEndDate(addRecurringExpenseRequest.getEndDate());
         recurringExpense.setUser(user);
+        recurringExpenseRepository.save(recurringExpense);
+        return recurringExpense;
+    }
+
+    @Transactional
+    public RecurringExpense updateRecurringExpense (Long id, UpdateRecurringExpenseRequest updateRecurringExpenseRequest) {
+        RecurringExpense recurringExpense = recurringExpenseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Recurring Expense not found with id " + id));
+        recurringExpense.setAmount(updateRecurringExpenseRequest.getAmount());
+        recurringExpense.setCategory(updateRecurringExpenseRequest.getCategory());
+        recurringExpense.setCurrency(updateRecurringExpenseRequest.getCurrency());
+        recurringExpense.setStartDate(updateRecurringExpenseRequest.getStartDate());
+        recurringExpense.setLocation(updateRecurringExpenseRequest.getLocation());
+        recurringExpense.setFrequency(updateRecurringExpenseRequest.getFrequency());
+        recurringExpense.setEndDate(updateRecurringExpenseRequest.getEndDate());
         recurringExpenseRepository.save(recurringExpense);
         return recurringExpense;
     }

@@ -1,8 +1,11 @@
 package com.example.backend.security.services;
 
+import com.example.backend.model.Income;
 import com.example.backend.model.Investment;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddInvestmentRequest;
+import com.example.backend.payload.request.UpdateIncomeRequest;
+import com.example.backend.payload.request.UpdateInvestmentRequest;
 import com.example.backend.repository.InvestmentRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -40,6 +43,21 @@ public class InvestmentService {
         investment.setRisk(addInvestmentRequest.getRisk());
         investment.setLiquidity(addInvestmentRequest.getLiquidity());
         investment.setUser(user);
+        investmentRepository.save(investment);
+        return investment;
+    }
+
+    @Transactional
+    public Investment updateInvestment(Long id, UpdateInvestmentRequest updateInvestmentRequest) {
+        Investment investment = investmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Investment not found with id " + id));
+        investment.setAmount(updateInvestmentRequest.getAmount());
+        investment.setCategory(updateInvestmentRequest.getCategory());
+        investment.setCurrency(updateInvestmentRequest.getCurrency());
+        investment.setDate(updateInvestmentRequest.getDate());
+        investment.setDuration(updateInvestmentRequest.getDuration());
+        investment.setRisk(updateInvestmentRequest.getRisk());
+        investment.setLiquidity(updateInvestmentRequest.getLiquidity());
         investmentRepository.save(investment);
         return investment;
     }

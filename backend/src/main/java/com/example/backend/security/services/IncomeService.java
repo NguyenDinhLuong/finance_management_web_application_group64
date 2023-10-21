@@ -3,6 +3,7 @@ package com.example.backend.security.services;
 import com.example.backend.model.Income;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddIncomeRequest;
+import com.example.backend.payload.request.UpdateIncomeRequest;
 import com.example.backend.repository.IncomeRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,6 +40,21 @@ public class IncomeService  {
         income.setStatus(addIncomeRequest.getStatus());
         income.setLocation(addIncomeRequest.getLocation());
         income.setUser(user);
+        incomeRepository.save(income);
+        return income;
+    }
+
+    @Transactional
+    public Income updateIncome(Long id, UpdateIncomeRequest updateIncomeRequest) {
+        Income income = incomeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Income not found with id " + id));
+        income.setAmount(updateIncomeRequest.getAmount());
+        income.setSource(updateIncomeRequest.getSource());
+        income.setCategory(updateIncomeRequest.getCategory());
+        income.setCurrency(updateIncomeRequest.getCurrency());
+        income.setDate(updateIncomeRequest.getDate());
+        income.setStatus(updateIncomeRequest.getStatus());
+        income.setLocation(updateIncomeRequest.getLocation());
         incomeRepository.save(income);
         return income;
     }

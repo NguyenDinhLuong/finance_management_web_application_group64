@@ -1,8 +1,11 @@
 package com.example.backend.security.services;
 
+import com.example.backend.model.Investment;
 import com.example.backend.model.NormalExpense;
 import com.example.backend.model.User;
 import com.example.backend.payload.request.AddExpenseRequest;
+import com.example.backend.payload.request.UpdateExpenseRequest;
+import com.example.backend.payload.request.UpdateInvestmentRequest;
 import com.example.backend.repository.ExpenseRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -41,6 +44,21 @@ public class ExpenseService {
         expense.setStatus(addExpenseRequest.getStatus());
         expense.setPaymentMethod(addExpenseRequest.getPaymentMethod());
         expense.setUser(user);
+        expenseRepository.save(expense);
+        return expense;
+    }
+
+    @Transactional
+    public NormalExpense updateExpense (Long id, UpdateExpenseRequest updateExpenseRequest) {
+        NormalExpense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Expense not found with id " + id));
+        expense.setAmount(updateExpenseRequest.getAmount());
+        expense.setCategory(updateExpenseRequest.getCategory());
+        expense.setCurrency(updateExpenseRequest.getCurrency());
+        expense.setDate(updateExpenseRequest.getDate());
+        expense.setLocation(updateExpenseRequest.getLocation());
+        expense.setStatus(updateExpenseRequest.getStatus());
+        expense.setPaymentMethod(updateExpenseRequest.getPaymentMethod());
         expenseRepository.save(expense);
         return expense;
     }
