@@ -33,3 +33,34 @@ export const addIncome = async ({
     });
   return response;
 };
+
+export const updateIncome = async ({
+  amount,
+  source,
+  category,
+  currency,
+  date,
+  status,
+  location,
+  id,
+}) => {
+  const response = await apiInstance
+    .put(`/incomes/update/${id}`, {
+      amount,
+      source,
+      category,
+      currency,
+      date,
+      status,
+      location,
+    })
+    .then(response => {
+      toast.success('Income updated successfully!');
+      return true;
+    })
+    .catch(error => {
+      toast.error('Income updated unsuccessfully!');
+      return false;
+    });
+  return response;
+};

@@ -23,6 +23,10 @@ import RecurringExpenses from './scenes/recurringExpenses';
 import AdminDashboard from './scenes/adminDashboard';
 import PrivateRouteAdmin from './components/PrivateRouteAdmin/PrivateRouteAdmin';
 import GoalForm from './scenes/form/goalForm';
+import EditIncomeForm from './scenes/form/editIncomeForm';
+import EditInvestmentForm from './scenes/form/editInvestmentForm';
+import EditExpenseForm from './scenes/form/editExpenseForm';
+import EditRecurringExpenseForm from './scenes/form/editRecurringExpenseForm';
 
 export default function App() {
   return (
@@ -36,9 +40,16 @@ export default function App() {
             <Route path="/team" element={<Team />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/incomes" element={<Incomes />} />
+            <Route path="/editIncome" element={<EditIncomeForm />} />
             <Route path="/investments" element={<Investments />} />
+            <Route path="/editInvestment" element={<EditInvestmentForm />} />
             <Route path="/expenses" element={<Expenses />} />
+            <Route path="/editExpense" element={<EditExpenseForm />} />
             <Route path="/recurringExpenses" element={<RecurringExpenses />} />
+            <Route
+              path="/editRecurringExpense"
+              element={<EditRecurringExpenseForm />}
+            />
             <Route path="/goalForm" element={<GoalForm />} />
             <Route path="/invoices" element={<Invoices />} />
             <Route path="/profile" element={<Profile />} />

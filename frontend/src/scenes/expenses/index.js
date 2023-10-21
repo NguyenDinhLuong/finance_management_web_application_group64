@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
 import Header from '../../components/Header';
@@ -6,12 +6,17 @@ import { useTheme } from '@mui/material';
 import React, { useState, useEffect, useRef } from 'react';
 import apiInstance from '../../apis/Axios';
 import { useCurrency } from '../../provider/CurrencyProvider';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { toast } from 'react-toastify';
+import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom';
 
 const Expenses = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [expensesData, setExpensesData] = useState([]);
   const { currency, rate } = useCurrency();
+  const navigate = useNavigate();
   const prevRateRef = useRef();
   const prevCurrencyRef = useRef();
 
@@ -83,6 +88,61 @@ const Expenses = () => {
       flex: 1,
     },
   ];
+
+  columns.push({
+    field: 'deleteAction',
+    headerName: 'Actions',
+    flex: 1,
+    sortable: false,
+    filterable: false,
+    disableClickEventBubbling: true,
+    renderCell: params => {
+      const handleDelete = () => {
+        apiInstance
+          .delete(`/expenses/deleteExpense/${params.id}`)
+          .then(response => {
+            console.log(response.data);
+            setExpensesData(prevData =>
+              prevData.filter(user => user.id !== params.id)
+            );
+            toast.success('Delete expense successfully!');
+          })
+          .catch(error => {
+            toast.error('Delete expense unsuccessfully!');
+          });
+      };
+      return (
+        <Box display="flex" justifyContent="center">
+          <IconButton onClick={handleDelete} color="error">
+            <DeleteIcon />
+          </IconButton>
+        </Box>
+      );
+    },
+  });
+
+  columns.push({
+    field: 'actions',
+    headerName: 'Edit Actions',
+    flex: 1,
+    sortable: false,
+    filterable: false,
+    disableClickEventBubbling: true,
+    renderCell: params => {
+      const handleEdit = () => {
+        localStorage.setItem('editExpenseId', params.id);
+        navigate('/editExpense');
+      };
+
+      return (
+        <Box display="flex" justifyContent="center" gap="10px">
+          <IconButton onClick={handleEdit} color="primary">
+            <EditIcon />
+          </IconButton>
+        </Box>
+      );
+    },
+  });
 
   return (
     <Box m="20px">

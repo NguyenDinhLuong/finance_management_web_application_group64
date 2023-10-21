@@ -16,7 +16,6 @@ import PaidIcon from '@mui/icons-material/Paid';
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import AdsClickIcon from '@mui/icons-material/AdsClick';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -212,13 +211,6 @@ const Sidebar = () => {
                   title="Financial Goal"
                   to="/goalForm"
                   icon={<AdsClickIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
-                <Item
-                  title="Upload receipts"
-                  to="/uploadReceipts"
-                  icon={<DriveFolderUploadIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />

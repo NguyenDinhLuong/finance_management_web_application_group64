@@ -32,3 +32,34 @@ export const addInvestment = async ({
     });
   return response;
 };
+
+export const updateInvestment = async ({
+  amount,
+  category,
+  currency,
+  date,
+  duration,
+  risk,
+  liquidity,
+  id,
+}) => {
+  const response = await apiInstance
+    .put(`/investment/update/${id}`, {
+      amount,
+      category,
+      currency,
+      date,
+      duration,
+      risk,
+      liquidity,
+    })
+    .then(response => {
+      toast.success('Investment updated successfully!');
+      return true;
+    })
+    .catch(error => {
+      toast.error('Investment updated unsuccessfully!');
+      return false;
+    });
+  return response;
+};

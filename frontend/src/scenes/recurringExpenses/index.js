@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
 import Header from '../../components/Header';
@@ -6,12 +6,17 @@ import { useTheme } from '@mui/material';
 import React, { useState, useEffect, useRef } from 'react';
 import apiInstance from '../../apis/Axios';
 import { useCurrency } from '../../provider/CurrencyProvider';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { toast } from 'react-toastify';
+import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom';
 
 const RecurringExpenses = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [recurringExpensesData, setRecurringExpensesData] = useState([]);
   const { currency, rate } = useCurrency();
+  const navigate = useNavigate();
   const prevRateRef = useRef();
   const prevCurrencyRef = useRef();
 
@@ -86,6 +91,61 @@ const RecurringExpenses = () => {
       flex: 1,
     },
   ];
+
+  columns.push({
+    field: 'deleteAction',
+    headerName: 'Actions',
+    flex: 1,
+    sortable: false,
+    filterable: false,
+    disableClickEventBubbling: true,
+    renderCell: params => {
+      const handleDelete = () => {
+        apiInstance
+          .delete(`/recurringExpenses/deleteRecurringExpense/${params.id}`)
+          .then(response => {
+            console.log(response.data);
+            setRecurringExpensesData(prevData =>
+              prevData.filter(user => user.id !== params.id)
+            );
+            toast.success('Delete recurring expense successfully!');
+          })
+          .catch(error => {
+            toast.error('Delete recurring expense unsuccessfully!');
+          });
+      };
+      return (
+        <Box display="flex" justifyContent="center">
+          <IconButton onClick={handleDelete} color="error">
+            <DeleteIcon />
+          </IconButton>
+        </Box>
+      );
+    },
+  });
+
+  columns.push({
+    field: 'actions',
+    headerName: 'Edit Actions',
+    flex: 1,
+    sortable: false,
+    filterable: false,
+    disableClickEventBubbling: true,
+    renderCell: params => {
+      const handleEdit = () => {
+        localStorage.setItem('editRecurringExpenseId', params.id);
+        navigate('/editRecurringExpense');
+      };
+
+      return (
+        <Box display="flex" justifyContent="center" gap="10px">
+          <IconButton onClick={handleEdit} color="primary">
+            <EditIcon />
+          </IconButton>
+        </Box>
+      );
+    },
+  });
 
   return (
     <Box m="20px">
