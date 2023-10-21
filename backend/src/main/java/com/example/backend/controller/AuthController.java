@@ -5,7 +5,7 @@ import com.example.backend.exception.TokenRefreshException;
 import com.example.backend.model.*;
 import com.example.backend.payload.request.*;
 import com.example.backend.payload.response.TokenRefreshResponse;
-import com.example.backend.repository.RefreshTokenRepository;
+import com.example.backend.repository.*;
 import com.example.backend.security.services.RefreshTokenService;
 import com.example.backend.security.services.UserService;
 import jakarta.validation.Valid;
@@ -20,8 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.example.backend.payload.response.JwtResponse;
 import com.example.backend.payload.response.MessageResponse;
-import com.example.backend.repository.RoleRepository;
-import com.example.backend.repository.UserRepository;
 import com.example.backend.security.jwt.JwtUtils;
 import com.example.backend.security.services.UserDetailsImpl;
 
@@ -39,7 +37,22 @@ public class AuthController {
     UserRepository userRepository;
 
     @Autowired
+    InvestmentRepository investmentRepository;
+
+    @Autowired
+    ExpenseRepository expenseRepository;
+
+    @Autowired
+    RecurringExpenseRepository recurringExpenseRepository;
+
+    @Autowired
+    GoalRepository goalRepository;
+
+    @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    IncomeRepository incomeRepository;
 
     @Autowired
     RefreshTokenRepository refreshTokenRepository;
@@ -71,12 +84,43 @@ public class AuthController {
         Optional<User> userData = userRepository.findById(id);
 
         if (userData.isPresent()) {
+            User user = userData.get();
+
+            // Check if the user has associated incomes
+            List<Income> userIncomes = incomeRepository.findByUserId(user.getId());
+            List<Investment> userInvestments = investmentRepository.findByUserId(user.getId());
+            List<NormalExpense> userExpenses = expenseRepository.findByUserId(user.getId());
+            List<RecurringExpense> userRecurringExpense = recurringExpenseRepository.findByUserId(user.getId());
+            List<Goal> userGoal = goalRepository.findByUserId(user.getId());
+
+            if(!userIncomes.isEmpty()) {
+               incomeRepository.deleteAll(userIncomes);
+            }
+
+            if(!userInvestments.isEmpty()) {
+                investmentRepository.deleteAll(userInvestments);
+            }
+
+            if(!userExpenses.isEmpty()) {
+                expenseRepository.deleteAll(userExpenses);
+            }
+
+            if(!userRecurringExpense.isEmpty()) {
+                recurringExpenseRepository.deleteAll(userRecurringExpense);
+            }
+
+            if(!userGoal.isEmpty()) {
+                goalRepository.deleteAll(userGoal);
+            }
+
+            // Now, delete the user
             userRepository.deleteById(id);
             return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User not found with the provided ID."));
         }
     }
+
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
