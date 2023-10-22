@@ -18,7 +18,7 @@ public class CurrencyExchangeService {
     }
 
     public String getExchangeRates() throws ResourceAccessException {
-        String API_URL = "https://openexchangerates.org/api/latest.json?app_id=371446c007bb4489a465d02220f4d516&base=USD&callback=someCallbackFunction";
+        String API_URL = "https://openexchangerates.org/api/latest.json?app_id=4552b74e7b1948acad92905d4886177a&base=USD&callback=someCallbackFunction";
 
         String response;
         try {
