@@ -19,9 +19,9 @@ const ExpenseForm = () => {
     const updatedData = {
       amount: values.amount,
       category: values.category,
+      currency: localStorage.getItem('currentCurrency'),
       date: values.date,
       location: values.location,
-      currency: localStorage.getItem('currentCurrency'),
       status: values.status,
       paymentMethod: values.paymentMethod,
       user_id: userId,

@@ -40,6 +40,7 @@ export default function LoginForm() {
             const isSuccessAddGoal = await addGoal({
               targetIncome: 10000,
               maximumExpense: 10000,
+              maximumRecurringExpense: 10000,
               maximumInvestment: 10000,
               currency: localStorage.getItem('currentCurrency'),
               user_id: localStorage.getItem('id'),

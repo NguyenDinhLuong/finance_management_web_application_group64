@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import React, { useState, useEffect } from 'react';
 import apiInstance from '../../apis/Axios';
 import { updateGoal } from '../../apis/Goal';
+import { useNavigate } from 'react-router-dom';
 
 const GoalForm = () => {
   //const userId = localStorage.getItem('id');
@@ -12,12 +13,16 @@ const GoalForm = () => {
   const [initialValues, setInitialValues] = useState({
     targetIncome: 0,
     maximumExpense: 0,
+    maximumRecurringExpense: 0,
     maximumInvestment: 0,
   });
+
+  const navigate = useNavigate();
 
   const checkoutSchema = yup.object().shape({
     targetIncome: yup.number().required('required'),
     maximumExpense: yup.number().required('required'),
+    maximumRecurringExpense: yup.number().required('required'),
     maximumInvestment: yup.number().required('required'),
   });
 
@@ -28,6 +33,7 @@ const GoalForm = () => {
         setInitialValues({
           targetIncome: response.data.targetIncome,
           maximumExpense: response.data.maximumExpense,
+          maximumRecurringExpense: response.data.maximumRecurringExpense,
           maximumInvestment: response.data.maximumInvestment,
         });
         console.log(response.data);
@@ -41,6 +47,7 @@ const GoalForm = () => {
     const updatedData = {
       targetIncome: values.targetIncome,
       maximumExpense: values.maximumExpense,
+      maximumRecurringExpense: values.maximumRecurringExpense,
       maximumInvestment: values.maximumInvestment,
       currency: localStorage.getItem('currentCurrency'),
       id: 1,
@@ -51,6 +58,7 @@ const GoalForm = () => {
     });
 
     if (isSuccess) {
+      navigate('/');
     }
   };
 
@@ -105,6 +113,27 @@ const GoalForm = () => {
                 name="maximumExpense"
                 error={!!touched.maximumExpense && !!errors.maximumExpense}
                 helperText={touched.maximumExpense && errors.maximumExpense}
+                sx={{ gridColumn: 'span 2' }}
+                inputProps={{ step: '0.01' }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Maximum Recurring Expense"
+                placeholder="$"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.maximumRecurringExpense}
+                name="maximumRecurringExpense"
+                error={
+                  !!touched.maximumRecurringExpense &&
+                  !!errors.maximumRecurringExpense
+                }
+                helperText={
+                  touched.maximumRecurringExpense &&
+                  errors.maximumRecurringExpense
+                }
                 sx={{ gridColumn: 'span 2' }}
                 inputProps={{ step: '0.01' }}
               />

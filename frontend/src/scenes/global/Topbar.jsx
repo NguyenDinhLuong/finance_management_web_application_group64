@@ -12,11 +12,16 @@ import { toast } from 'react-toastify';
 import apiInstance from '../../apis/Axios';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
 import { Check } from '@mui/icons-material';
 import { useCurrency } from '../../provider/CurrencyProvider';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import Badge from '@mui/material/Badge';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 const currencies = [
   { code: 'AUD', flag: '🇦🇺' },
@@ -31,6 +36,23 @@ const currencies = [
   { code: 'NZD', flag: '🇳🇿' },
 ];
 
+const convertFrequencyToDays = frequency => {
+  switch (frequency) {
+    case 'DAILY':
+      return 1;
+    case 'WEEKLY':
+      return 7;
+    case 'MONTHLY':
+      return 30; // Assuming an average month has 30 days
+    case 'QUARTERLY':
+      return 3 * 30; // 3 months
+    case 'YEARLY':
+      return 365; // Ignoring leap years for simplicity
+    default:
+      throw new Error(`Unknown frequency: ${frequency}`);
+  }
+};
+
 const Topbar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -38,16 +60,82 @@ const Topbar = () => {
   const navigate = useNavigate();
   const refreshToken = getRefreshToken();
   const role = localStorage.getItem('role');
-
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const { currency, setCurrency, setRate } = useCurrency();
+  const notificationIconRef = useRef(null);
+  const notificationTimeoutRef = useRef(null);
   const [selectedCurrency, setSelectedCurrency] = useState(
     localStorage.getItem('currentCurrency')
   ); // Set default selected currency to AUD
+  const [recurringExpensesData, setRecurringExpensesData] = useState([]);
+  const [message, setMessage] = useState('');
 
   const inputCurrency = selectedCurrency;
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleNotificationClick = event => {
+    setNotificationAnchorEl(event.currentTarget);
+  };
+
+  useEffect(() => {
+    setMessage('');
+    apiInstance
+      .get(`/recurringExpenses/${localStorage.getItem('id')}`) // this assumes the endpoint for fetching incomes is `/incomes`
+      .then(response => {
+        setRecurringExpensesData(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the expense data', error);
+      });
+
+    let checkMessage = '';
+
+    recurringExpensesData.forEach(expense => {
+      const startDate = new Date(expense.startDate);
+      const nextPaymentDate = new Date(startDate);
+      const currentDate = new Date();
+
+      if (currentDate > startDate) {
+        while (nextPaymentDate <= currentDate) {
+          nextPaymentDate.setDate(
+            nextPaymentDate.getDate() +
+              convertFrequencyToDays(expense.frequency)
+          );
+        }
+        // Get the difference in days
+        const differenceInDays = Math.round(
+          (nextPaymentDate - currentDate) / (1000 * 60 * 60 * 24)
+        );
+        if (differenceInDays <= 3) {
+          checkMessage =
+            checkMessage +
+            `You have a recurring expense for ${expense.category} with ${expense.amount} ${expense.currency} due in ${differenceInDays} days.\n`;
+          setMessage(checkMessage);
+        }
+      }
+
+      if (currentDate < startDate) {
+        const differenceInDays = Math.round(
+          (startDate - currentDate) / (1000 * 60 * 60 * 24)
+        );
+
+        if (differenceInDays <= 3) {
+          checkMessage =
+            checkMessage +
+            `You have a recurring expense for ${expense.category} with ${expense.amount} ${expense.currency} due in ${differenceInDays} days.\n`;
+          setMessage(checkMessage);
+        }
+      }
+    });
+  }, [recurringExpensesData]);
+
+  const handleNotificationClose = () => {
+    // Manually close the Popover and clear the timeout
+    setNotificationAnchorEl(null);
+    clearTimeout(notificationTimeoutRef.current);
   };
 
   const handleMenuItemClick = currencyCode => {
@@ -187,9 +275,41 @@ const Topbar = () => {
           )}
         </IconButton>
         {role === 'ROLE_USER' && (
-          <IconButton>
-            <NotificationsOutlinedIcon />
-          </IconButton>
+          <>
+            <IconButton
+              ref={notificationIconRef}
+              onClick={handleNotificationClick}
+            >
+              {message !== '' ? (
+                <Badge badgeContent={1} color="primary">
+                  <NotificationsActiveIcon />
+                </Badge>
+              ) : (
+                <NotificationsOutlinedIcon />
+              )}
+            </IconButton>
+            <Popover
+              open={Boolean(notificationAnchorEl)}
+              anchorEl={notificationAnchorEl}
+              onClose={handleNotificationClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+            >
+              <Box p={2} display="flex" alignItems="center">
+                {' '}
+                {/* Add display="flex" and alignItems="center" */}
+                <PriorityHighIcon sx={{ mr: 1 }} />{' '}
+                {/* Add some margin to the right of the icon */}
+                <Typography variant="body1">{message}</Typography>
+              </Box>
+            </Popover>
+          </>
         )}
         {role === 'ROLE_USER' && (
           <>

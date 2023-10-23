@@ -63,24 +63,4 @@
 //     endDate: '2023-10-14',
 //   },
 // ];
-import { useState, useEffect } from 'react';
-import apiInstance from '../apis/Axios';
 
-const useExpensesData = () => {
-  const [expenseData, setExpensesData] = useState([]);
-
-  useEffect(() => {
-    apiInstance
-      .get(`/expenses/${localStorage.getItem('id')}`)
-      .then(response => {
-        setExpensesData(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the incomes data', error);
-      });
-  }, []);
-
-  return expenseData;
-};
-
-export default useExpensesData;

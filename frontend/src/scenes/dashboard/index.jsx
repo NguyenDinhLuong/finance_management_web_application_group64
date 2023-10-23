@@ -42,6 +42,7 @@ const Dashboard = () => {
   const [totalTaxAmount, setTotalTaxAmount] = useState(0);
   const [targetIncome, setTargetIncome] = useState(0);
   const [maximumExpense, setMaximumExpense] = useState(0);
+  const [maximumRecurringExpense, setMaximumRecurringExpense] = useState(0);
   const [maximumInvestment, setMaximumInvestment] = useState(0);
   const { currency, rate } = useCurrency();
   const prevRateRef = useRef();
@@ -77,10 +78,12 @@ const Dashboard = () => {
         if (
           goalResponse.data.targetIncome != null &&
           goalResponse.data.maximumExpense != null &&
+          goalResponse.data.maximumRecurringExpense != null &&
           goalResponse.data.maximumInvestment != null
         ) {
           setTargetIncome(goalResponse.data.targetIncome);
           setMaximumExpense(goalResponse.data.maximumExpense);
+          setMaximumRecurringExpense(goalResponse.data.maximumRecurringExpense);
           setMaximumInvestment(goalResponse.data.maximumInvestment);
         }
       } catch (error) {
@@ -99,6 +102,7 @@ const Dashboard = () => {
     const updatedTotalTaxAmount = totalTaxAmount * rate;
     const updatedTargetIncome = targetIncome * rate;
     const updatedMaximumExpense = maximumExpense * rate;
+    const updatedMaximumRecurringExpense = maximumRecurringExpense * rate;
     const updatedMaximumInvestment = maximumInvestment * rate;
     // Check if rate or currency has changed from their previous values
     if (rate !== prevRateRef.current || currency !== prevCurrencyRef.current) {
@@ -109,6 +113,7 @@ const Dashboard = () => {
       setTotalTaxAmount(updatedTotalTaxAmount);
       setTargetIncome(updatedTargetIncome);
       setMaximumExpense(updatedMaximumExpense);
+      setMaximumRecurringExpense(updatedMaximumRecurringExpense);
       setMaximumInvestment(updatedMaximumInvestment);
     }
     // Update the refs with the current values
@@ -124,6 +129,7 @@ const Dashboard = () => {
     totalTaxAmount,
     targetIncome,
     maximumExpense,
+    maximumRecurringExpense,
     maximumInvestment,
   ]);
 
@@ -195,10 +201,11 @@ const Dashboard = () => {
           <StatBox
             title={totalRecurringExpenseAmount + ' ' + currency}
             subtitle="Total Recurring Expense"
-            progress={totalRecurringExpenseAmount / maximumExpense}
+            progress={totalRecurringExpenseAmount / maximumRecurringExpense}
             increase={
-              Math.round((totalRecurringExpenseAmount / maximumExpense) * 100) +
-              '%'
+              Math.round(
+                (totalRecurringExpenseAmount / maximumRecurringExpense) * 100
+              ) + '%'
             }
             icon={
               <AccountBalanceIcon
@@ -228,16 +235,6 @@ const Dashboard = () => {
               />
             }
           />
-          {/* <StatBox
-            title={totalTaxAmount + ' ' + currency}
-            subtitle="Total Taxes"
-            progress="1"
-            icon={
-              <CalculateIcon
-                sx={{ color: colors.greenAccent[600], fontSize: '26px' }}
-              />
-            }
-          /> */}
         </Box>
 
         {/* ROW 2 */}
@@ -318,7 +315,7 @@ const Dashboard = () => {
             alignItems="center"
             mt="25px"
           >
-            <ProgressCircle size="125" />
+            <ProgressCircle size="75" />
             <Typography
               variant="h5"
               color={colors.greenAccent[500]}
@@ -331,6 +328,10 @@ const Dashboard = () => {
                 '\n' +
                 'Maximum Expense: ' +
                 maximumExpense +
+                currency +
+                '\n' +
+                'Maximum Recurring Expense: ' +
+                maximumRecurringExpense +
                 currency +
                 '\n' +
                 'Maximum Investment: ' +

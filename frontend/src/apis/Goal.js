@@ -4,6 +4,7 @@ import apiInstance from './Axios';
 export const addGoal = async ({
   targetIncome,
   maximumExpense,
+  maximumRecurringExpense,
   maximumInvestment,
   currency,
   user_id,
@@ -12,6 +13,7 @@ export const addGoal = async ({
     .post('/goals/addGoal', {
       targetIncome,
       maximumExpense,
+      maximumRecurringExpense,
       maximumInvestment,
       currency,
       user_id,
@@ -31,6 +33,7 @@ export const addGoal = async ({
 export const updateGoal = async ({
   targetIncome,
   maximumExpense,
+  maximumRecurringExpense,
   maximumInvestment,
   currency,
   id,
@@ -39,6 +42,7 @@ export const updateGoal = async ({
     .put(`/goals/update/${id}`, {
       targetIncome,
       maximumExpense,
+      maximumRecurringExpense,
       maximumInvestment,
       currency,
     })
