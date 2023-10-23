@@ -10,6 +10,8 @@ public class UpdateGoalRequest {
     @NotBlank
     private float maximumExpense;
     @NotBlank
+    private float maximumRecurringExpense;
+    @NotBlank
     private float maximumInvestment;
     @NotBlank
     private String currency;

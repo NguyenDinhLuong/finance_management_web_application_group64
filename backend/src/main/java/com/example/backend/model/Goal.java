@@ -20,6 +20,7 @@ public class Goal {
     private Long id;
     private float targetIncome;
     private float maximumExpense;
+    private float maximumRecurringExpense;
     private float maximumInvestment;
     private String currency;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

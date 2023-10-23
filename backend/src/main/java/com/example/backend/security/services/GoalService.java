@@ -35,6 +35,7 @@ public class GoalService {
         Goal goal = new Goal();
         goal.setTargetIncome(addGoalRequest.getTargetIncome());
         goal.setMaximumExpense(addGoalRequest.getMaximumExpense());
+        goal.setMaximumRecurringExpense(addGoalRequest.getMaximumRecurringExpense());
         goal.setMaximumInvestment(addGoalRequest.getMaximumInvestment());
         goal.setCurrency(addGoalRequest.getCurrency());
         goal.setUser(user);
@@ -48,6 +49,7 @@ public class GoalService {
                 .orElseThrow(() -> new EntityNotFoundException("Goal not found with id " + id));
         goal.setTargetIncome(updateGoalRequest.getTargetIncome());
         goal.setMaximumExpense(updateGoalRequest.getMaximumExpense());
+        goal.setMaximumRecurringExpense(updateGoalRequest.getMaximumRecurringExpense());
         goal.setMaximumInvestment(updateGoalRequest.getMaximumInvestment());
         goal.setCurrency(updateGoalRequest.getCurrency());
         goalRepository.save(goal);
@@ -66,9 +68,11 @@ public class GoalService {
             try {
                 double convertedIncome = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) goal.getTargetIncome());
                 double convertedExpense = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) goal.getMaximumExpense());
+                double convertedRecurringExpense = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) goal.getMaximumRecurringExpense());
                 double convertedInvestment = currencyExchangeService.convertCurrency(inputCurrency, outputCurrency, (double) goal.getMaximumInvestment());
                 goal.setTargetIncome((float) convertedIncome);
                 goal.setMaximumExpense((float) convertedExpense);
+                goal.setMaximumRecurringExpense((float) convertedRecurringExpense);
                 goal.setMaximumInvestment((float) convertedInvestment);
                 goal.setCurrency(outputCurrency);
                 goalRepository.save(goal);
