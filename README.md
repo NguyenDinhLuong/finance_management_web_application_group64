@@ -1,6 +1,6 @@
-## List all used libraries and their versions
+# List all used libraries and their versions
 
-# Here are the libraries and their respective versions used in the frontend (ReactJS)
+## Here are the libraries and their respective versions used in the frontend (ReactJS)
 1. **@emotion/react**: ^11.10.4
 2. **@emotion/styled**: ^11.10.4
 3. **@fullcalendar/core**: ^5.11.3
@@ -37,7 +37,7 @@
 34. **web-vitals**: ^2.1.4
 35. **yup**: ^0.32.11
 
-# Here are the libraries (dependencies) and their respective versions used in backend (Spring Boot)
+## Here are the libraries (dependencies) and their respective versions used in backend (Spring Boot)
 
 1. **org.springframework.boot:spring-boot-starter-parent**: 3.1.3
 2. **org.springframework.boot:spring-boot-starter-data-jpa**: Inherited from parent (version 3.1.3)
@@ -52,7 +52,7 @@
 11. **org.springframework.boot:spring-boot-starter-security**: Inherited from parent (version 3.1.3)
 12. **com.vaadin.external.google:android-json**: 0.0.20131108.vaadin1
 
-## List all working functionalities of the project
+# List all working functionalities of the project
 
 1. ** User Authentication and Authorization**
    - Sign in using unique username and password with validity checks.
@@ -101,16 +101,16 @@
    - **Pie Chart**: Visual breakdown of expenses, income sources, and investment types.
    - **Line Chart**: Provides historical data for income, expenses, and investments.
      
-## A quick guide on how to run your application
+# A quick guide on how to run your application
 
-# Prerequisites:
+## Prerequisites:
 
 1. **Node.js & npm**: Ensure you have [Node.js](https://nodejs.org/) and npm installed for React.
 2. **Java JDK**: Install a suitable version for Spring Boot (typically Java 8 or 11).
 3. **Maven**: For building the Spring Boot application.
 4. **MySQL Workbench**: Installed and running.
 
-# Steps:
+## Steps:
 
 1 Set Up MySQL:
 1.1 Open MySQL Workbench and log in to your MySQL server instance.
@@ -131,7 +131,7 @@
 4. Access the Application:
 Open a browser and go to `http://localhost:3000` (or the port you've set for React). You should now see your frontend application and be able to interact with the backend.
 
-# Note:
+## Note:
 
 1. Ensure that the React application has the correct proxy settings (usually in `package.json`) to communicate with the backend. For instance: "proxy": "http://localhost:8080"
 
